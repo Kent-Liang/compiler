@@ -1,0 +1,15 @@
+% S12 passing test
+
+begin 
+
+	integer function foo (boolean x) begin
+
+		boolean function boo (integer y) begin
+			return (true)
+		end
+
+		return (1)
+
+	end
+
+end

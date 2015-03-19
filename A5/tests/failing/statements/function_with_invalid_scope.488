@@ -1,0 +1,5 @@
+% function with invalid scope
+begin 
+	boolean	function funcCall begin
+		return (true)
+end

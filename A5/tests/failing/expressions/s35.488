@@ -1,0 +1,31 @@
+begin
+    integer function foo begin
+        return (true)
+    end
+
+    boolean function foo2 begin
+        return (1)
+    end
+
+    integer function foo3 begin
+        boolean x
+        return (x)
+    end
+
+    boolean function foo4 begin
+        integer x
+        return (x)
+    end
+
+    integer function foo5 begin
+        return (foo2)
+    end
+
+    boolean function foo6 begin
+        return (foo3)
+    end
+
+    boolean function foo7 begin
+        return ({put skip yields foo})
+    end
+end

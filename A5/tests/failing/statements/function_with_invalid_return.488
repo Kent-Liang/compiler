@@ -1,0 +1,6 @@
+% function with invalid return
+begin
+	integer function funcCall begin
+		return (1
+	end
+end

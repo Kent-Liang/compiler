@@ -1,0 +1,12 @@
+% This tests anonymous function syntax
+
+begin
+	integer y
+	y <= {
+		integer x
+		x <= 5
+		put "hello world", skip
+		yields 7
+	}
+
+end

@@ -1,0 +1,6 @@
+% if statement with no end
+begin
+	integer x
+	x <= 9
+	if true then put x  
+end

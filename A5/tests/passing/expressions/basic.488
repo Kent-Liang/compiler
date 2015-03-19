@@ -1,0 +1,82 @@
+begin
+
+	integer x, y, z, exp
+	boolean a, b, c, exp2
+
+	x <= 125
+	y <= 8315
+	z <= 1023
+
+	a <= true
+	b <= false
+	c <= false
+
+	% Overwhelming unary minus
+	exp <= x - ------------------------------x
+	% Integer expression (addition)
+	exp <= 5 + x
+	% Integer expression (minus)
+	exp <= 5 - x
+	% Integer expression (division)
+	exp <= 5 / x
+	% Integer expression (multiplication)
+	exp <= 5 * x
+	% Boolean expression (and)
+	exp2 <= a & b
+	exp2 <= a & (b & c)
+	% Boolean expression (or)
+	exp2 <= a | b
+	exp2 <= a | (b | c)
+	% Boolean expression (equality)
+	exp2 <= a = b
+	exp2 <= a = (b = c)
+	% Boolean expression (inequality)
+	exp2 <= a != b
+	exp2 <= a != (b != c)
+	% Boolean expression (less than)
+	exp2 <= x < y
+	exp2 <= x < (y < z)
+	% Boolean expression (less than or equal)
+	exp2 <= x <= y
+	exp2 <= x <= (y <= z)
+	% Boolean expression (greater)
+	exp2 <= x > y
+	exp2 <= x > (y > z)
+	% Boolean expression (greater than or equal)
+	exp2 <= x >= y
+	exp2 <= x >= (y >= z)
+	% Parenthesized expression 
+	exp2 <= (x > y)
+	exp2 <= (x > (y > (z)))
+	% Yield expression (lambda)
+	y <= {	x <= 6	yields x }
+	y <= {	integer d,e,g
+				g <= 0
+				d <= 5
+				e <= 7
+				if (5 < 7) then g <= 10 end
+			yields 
+				g	}
+
+	% Unnecessary to declare functions in this setting
+	% function expression (function w/o args)
+
+	boolean function func begin
+		return (true)
+	end
+	boolean function funcCall begin
+		proc
+		return (true)
+	end
+
+	% function expression (function w/ args / reference to parameter)
+
+	procedure printLess(integer n) begin
+		if n > 0 then
+			put n
+			printLess(n-1)
+		end
+		return
+	end
+
+end

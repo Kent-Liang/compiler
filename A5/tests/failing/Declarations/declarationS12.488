@@ -1,0 +1,13 @@
+% S12 failing test
+
+begin
+
+	boolean function boo (boolean y) begin
+		return (true)
+	end
+
+	boolean function boo (boolean z) begin
+		return (false)
+	end
+
+end

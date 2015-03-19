@@ -1,0 +1,4 @@
+% array declaration with missing bound
+begin
+	integer array[ ]
+end

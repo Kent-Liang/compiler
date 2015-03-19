@@ -1,0 +1,38 @@
+%S50 Check that exit statement is directly inside a loop
+%S51 Check that return is inside a function
+%S52 Check that return statement is inside a procedure.
+%S53 Check that a function body contains at least one return statement
+
+
+begin
+	integer x
+	% A function should have a return inside
+	integer function test1 begin
+		return (5)
+	end
+
+	% A procedure should have a return inside, with no parameter
+	procedure test2 begin
+		put "Hello world", skip
+		return
+	end
+
+	% Exit statement, if it exists, should be directly inside a loop
+	loop
+		test2
+		exit when true
+	end
+
+	loop
+		test2
+		exit
+	end
+
+	%Similar test, but should pass without exit statement
+	loop
+		test2
+	end
+	
+	x <= test1
+	test2
+end

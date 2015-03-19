@@ -1,0 +1,9 @@
+% loop with invalid exit when statement
+begin
+	integer k
+	k <= 1
+	loop
+		k <= k - 1
+		exit when
+	end
+end

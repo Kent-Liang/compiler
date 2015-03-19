@@ -1,0 +1,8 @@
+
+%S40 Check that identifier has been declared as a function..
+
+begin
+    integer x
+    integer foo
+    x <= foo(1) % should report that foo has not been declared as a function
+end

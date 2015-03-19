@@ -1,0 +1,9 @@
+% invalid function call, invalid argument type because argument doesn't accept texts
+begin
+	integer function funCall(integer n, integer k) begin
+		return (5)
+	end
+	
+	integer sum
+	sum <= funCall(5, "a")
+end

@@ -1,0 +1,5 @@
+% assignment with missing variable
+begin
+	integer a
+	<= 3
+end

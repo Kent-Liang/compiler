@@ -1,0 +1,9 @@
+% function with invalid embedded function
+begin 
+	boolean	function funcCall begin
+		integer function embeddedfunc integer n) begin
+			return (0)
+		end
+		return (true)
+	end
+end

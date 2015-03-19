@@ -1,0 +1,32 @@
+%S31 Check that type of expression or variable is integer
+begin
+    boolean x
+    boolean y
+    boolean a
+    integer z
+
+    boolean function foo begin
+        return (true)
+    end
+
+    z <= x + y
+    z <= x - y
+    z <= x * y
+    z <= x / y
+    z <= x < y
+    a <= x > y
+    a <= x <= y
+    a <= x >= y
+
+    z <= foo + y
+    z <= foo - y
+    z <= foo * y
+    z <= foo / y
+
+    z <= -x
+    z <= -foo
+
+    z <= {put skip yields true} + {put skip yields false}
+    z <= {put skip yields false} - y
+    z <= {put skip yields false} + 1
+end

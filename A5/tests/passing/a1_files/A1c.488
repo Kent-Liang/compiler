@@ -1,0 +1,70 @@
+begin
+	integer k
+	boolean b
+
+	% while-loop conditional exit statement
+	k <= 10
+	while k < 5 do
+		k <= k + 1
+	end
+
+	b <= false
+	while b do
+		k <= -1
+	end
+
+	% while-loop immediate exit statement
+	k <= 5
+	while k < 10 do
+		exit
+	end
+
+	% while-loop exit-when statement
+	k <= 0
+	while k < 10 do
+		k <= k + 1
+		exit when k = 5
+	end
+
+	% while-loop multiple iteration statement
+	k <= 0
+	while k < 10 do
+		k <= k + 1
+	end
+
+	% loop immediate exit statement
+	k <= 0
+	loop
+		exit
+		k <= k + 1
+	end
+
+	% loop pre-exit-when statement
+	k <= 0
+	loop
+		exit when k = 0
+		k <= k - 1
+	end
+
+	% loop post-exit-when statement
+	k <= 1
+	loop
+		k <= k - 1
+		exit when k = 0
+	end
+
+	% loop pre-exit-when multiple iteration statement
+	k <= 10
+	loop
+		exit when k = 0
+		k <= k - 1
+	end
+
+	% loop post-exit-when multiple iteration statement
+	k <= 10
+	loop
+		k <= k - 1
+		exit when k = 0
+	end
+
+end

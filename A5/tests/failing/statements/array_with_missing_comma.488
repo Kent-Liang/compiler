@@ -1,0 +1,4 @@
+% array declaration with missing comma
+begin
+	integer array[1 2]
+end

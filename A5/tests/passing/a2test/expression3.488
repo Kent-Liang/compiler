@@ -1,0 +1,12 @@
+% Test arithmetic operators with mix of variables and fixed integers
+
+begin
+        integer x
+        x <= 8
+        integer z
+
+        z <= x + 1
+        z <= x - 1
+        z <= x * 10
+        z <= x / 4
+end

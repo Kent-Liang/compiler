@@ -1,0 +1,10 @@
+% S17 failing test
+begin
+
+	procedure foo begin
+	end
+
+	procedure foo begin
+	end
+
+end

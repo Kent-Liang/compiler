@@ -1,0 +1,92 @@
+% author: Lana Borodina
+begin
+
+	% counter and control variables for loops below
+	integer count
+	boolean continue
+
+	
+	% while loop that prints "hello world" to standard output
+	% exactly once
+	continue <= true
+	while continue do
+		put "hello world" , skip
+		continue <= false
+	end
+
+
+	% while loop that prints "hello world" to standard output
+	% 5 times, each on a separate line  
+	count <= 0
+	while count < 5 do
+		put "hello world" , skip
+		count <= count + 1
+	end
+
+	
+	% while loop that prints "hello world" to standard output
+	% 5 times, each on a separate line  
+	count <= 1
+	while true do
+		put "hello world" , skip
+		count <= count + 1
+		if count = 5 then 
+			exit
+		end
+	end
+
+
+	% infinite while loop that repeatedly prints "hello world"
+	% to standard output, each on a separate line
+	while true do
+		put "hello world" , skip 
+	end
+
+
+	% loop that prints "hello world" to standard output 
+	% exactly once
+	continue <= false
+	loop 
+		put "hello world" , skip
+		if !continue then 
+			exit
+		end
+	end
+
+
+	% loop that prints "hello world" to standard output 5
+	% times, each on a separate line
+	count <= 1
+	loop 
+		put "hello world" , skip
+		count <= count + 1
+		if count = 5 then 
+			exit
+		end
+	end
+
+
+	% loop that prints "hello world" to standard output 5
+	% times, each on a separate line
+	count <= 1
+	loop 
+		put "hello world" , skip
+		count <= count + 1
+		exit when count = 5
+	end
+	
+
+	% infinite loop that repeatedly prints "hello world" to
+	% standard output, each on a separate line
+	loop
+		put "hello world" , skip
+	end
+
+	% Test exit when in while loop
+	count <= 0
+	while true do
+		count <= count + 1
+		exit when count = 5
+	end
+
+end

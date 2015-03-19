@@ -1,0 +1,6 @@
+% function with no type
+begin
+	function funcCall begin
+		return (true)
+	end
+end

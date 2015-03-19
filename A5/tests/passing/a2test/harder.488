@@ -1,0 +1,112 @@
+% test more complicated constructs, more nesting
+ begin
+    begin
+       integer I, J, K
+        procedure Q ( integer I, integer J , integer K , integer L , integer M  )
+ 	 begin
+ 		 begin
+ 		loop
+			 while 6 > 1 do
+                           begin
+				integer  M
+ 				M <= I*J+K/L
+				exit  when M!= 17
+                           end
+ 			end
+		    exit when  7 < 5
+		 end
+	 end
+	 return
+	 end
+         boolean function  R    begin
+	 begin
+                boolean function isTrue( boolean Q  , integer M   )
+ 	        begin  boolean  X, Y
+		    return(
+                       { X <= R yields ! X& Y |  X&! Y | !!!! Q &  R! = Q |  Q| Q& Q| Q&! Q|! Q& Y|! Y } )
+	        end  %  isTrue
+		 begin
+			 begin
+				 return( !  isTrue( false, 99 ) )
+			 end
+		 end
+	 end
+	  end
+
+          % { }
+          % int function() {
+          %    {
+          %    }
+          % }
+
+        procedure P ( integer J   , boolean Q   )
+	begin
+                while Q do
+		 begin
+                        loop
+                                exit when!!! Q
+			     begin
+                                while! Q do
+                                exit when ----J <= K
+                             end
+                        end
+		  return
+                end
+	end
+	end
+	return
+        end
+       Q( I , J/12 , K*17 , I+J+K*K*K*K , P( 17, false ) )
+    end
+    begin  % scope
+       integer  I, J, K, L, M
+       boolean  P, Q, R, NP
+       if P then if Q then if ! R then I <= 1 end end end
+       if P then I <= 7 else if P then if Q then if R then I <= 9 end end end end
+       if P then if Q then I <= 11 end else I <= 13 end
+       if P then if Q then I <= 17 else I <= 19 end else if R then I <= 23 else I <= 29 end I<= 1 end
+       if P then P <= ! P& Q| R  I <= I*I*I*K*J*K*L*M/17 else
+	   while true do
+		loop
+			while true do
+				loop  exit  when P = NP end
+			end  % while
+		end  % loop
+	   end % while
+	end % if
+    end  % scope
+    begin  % scope
+        boolean function  F( boolean M  )
+          begin
+            integer function H( boolean B   )  begin  if B then  return(  7 ) else return(  8 ) end  end  %H
+            boolean function G( integer Y   )
+             begin
+                 procedure P( integer Z   )
+		   begin  if Z <= 7|  Z!= 12| (Z+1) < (Z+2) then
+			return end
+                   end  % P
+                  P( Y )
+                  integer Z
+                  loop
+                      begin
+                          procedure Q( boolean Z   )
+				 begin
+                                 if! Z then
+                                 return
+                                 else
+                                 return
+                                 end
+                                 end  % Q
+                         Q( Z!= 12 )
+                      end
+                     exit when Y < 7
+                     Y <= Y - 1
+                    exit when  Z < 6
+                 end % loop
+             end  % G
+            put " in F "
+          end  % F
+       integer  W
+       W <= F( false )
+    end  % scope
+ end

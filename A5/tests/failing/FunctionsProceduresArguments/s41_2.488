@@ -1,0 +1,9 @@
+%S41 Check that identifier has been declared as a procedure.
+
+begin
+    integer function foo begin
+        return (1)
+    end
+
+    foo
+end

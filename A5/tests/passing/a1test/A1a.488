@@ -1,0 +1,40 @@
+% author: Eric Snyder
+% a) a program that uses all arithmetic, logical and comparison operators
+
+begin 
+
+	integer x
+	integer y
+	boolean z
+
+	x <= 10
+	y <= 10
+	z <= false
+
+	% Test all arithmetic operators
+	x <= x + 2 % Result: 12
+	x <= x - 3 % Result: 9
+	y <= y * 2 % Result: 20
+	y <= y / 10 % Result: 2
+	y <= - y % Result: -2
+
+	% Test all logical operators
+	z <= (!z) % Result: true
+	z <= (z & true) % Result: true
+	z <= (z | false) % Result: true
+	z <= (z = true) % Result: true
+
+	% Test all comparison operators
+	z <= (z != false) % Result: true
+	z <= (x > y) % Result: true
+	z <= (y < x)  % Result: true
+	z <= (x <= 15) % Result: true
+	z <= (x >= 5) % Result: true
+	z <= (x <= 9) % Result: true
+	z <= (x >= 9) % Result: true
+
+	% Test precedence
+	x <= (y - y + -x * x / x) % Should resolve in the order unary -, *, /, +, binary -
+	z <= (!true | true & !true) % Should resolve in the order ! & |
+	
+end

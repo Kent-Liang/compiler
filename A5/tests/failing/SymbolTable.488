@@ -1,0 +1,16 @@
+% Additional testing of the symbol table not covered by scopes and program
+
+begin
+	integer x
+
+	x <= {exit yields 5}
+
+	loop
+		integer x
+	end
+
+	if true then
+		integer b
+	end
+
+end 

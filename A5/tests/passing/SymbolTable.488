@@ -1,0 +1,27 @@
+ % Additional testing of the symbol table not covered by the scopes and programs file
+
+begin
+
+	integer x
+	x <= {
+		put "hello world", skip
+		yields 5
+	}
+
+	if (x = 5) then
+		loop
+			put "hello world", skip
+			exit
+		end
+	end
+
+	if (x != 5) then
+		put "hello world", skip
+	else
+		loop
+			put "hello world", skip
+			x <= (x + 1)
+			exit when (x = 10)
+		end
+	end
+end

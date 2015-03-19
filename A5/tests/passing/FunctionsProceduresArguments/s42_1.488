@@ -1,0 +1,8 @@
+begin
+    integer function foo begin
+        return (1)
+    end
+
+    integer y
+    y <= foo
+end

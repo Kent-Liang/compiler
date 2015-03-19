@@ -1,0 +1,5 @@
+begin
+	
+	put 5 < 4 < 2
+
+end

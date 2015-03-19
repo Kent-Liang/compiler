@@ -1,0 +1,6 @@
+% S19 failing test
+begin
+
+	integer x[5..1, -5..-10]
+	
+end

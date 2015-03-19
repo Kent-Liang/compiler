@@ -1,0 +1,10 @@
+%S40 Check that identifier has been declared as a function..
+
+begin
+    procedure foo begin
+        return
+    end
+
+    integer x
+    x <= foo
+end

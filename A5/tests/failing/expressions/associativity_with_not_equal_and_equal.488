@@ -1,0 +1,9 @@
+% associativity with not equal and equal
+begin
+    boolean a, b, c, exp
+    a <= true
+    b <= false
+    c <= false
+
+    exp <= a != b = c
+end

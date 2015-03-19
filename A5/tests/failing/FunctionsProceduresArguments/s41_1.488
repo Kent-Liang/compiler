@@ -1,0 +1,6 @@
+%S41 Check that identifier has been declared as a procedure.
+
+begin
+    integer x
+    x
+end

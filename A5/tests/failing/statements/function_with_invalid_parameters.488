@@ -1,0 +1,6 @@
+% function with invalid parameters
+begin
+	integer function funCall(integer n integer b) begin
+		return (n)
+	end
+end

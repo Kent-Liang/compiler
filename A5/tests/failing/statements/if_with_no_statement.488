@@ -1,0 +1,4 @@
+% if statement without a statement after then
+begin
+	if true then end
+end

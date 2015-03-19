@@ -1,0 +1,14 @@
+% Test arithmetic operators with variables
+
+begin
+        integer x
+        x <= 8
+        integer y
+        y <= 4
+
+        integer z
+        z <= x + y
+        z <= x - y
+        z <= x * y
+        z <= x / y
+end

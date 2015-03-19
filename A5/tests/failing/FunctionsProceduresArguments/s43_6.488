@@ -1,0 +1,10 @@
+%S43 Check that the number of arguments is equal to the number of formal parameters
+
+begin
+    integer function foo(integer x, integer y) begin
+        return (x + y)
+    end
+
+    integer x
+    x <= foo(1, 2, 3)
+end

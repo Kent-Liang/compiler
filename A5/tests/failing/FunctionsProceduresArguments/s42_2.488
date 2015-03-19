@@ -1,0 +1,9 @@
+% S42 Check that the function or procedure has no parameters
+begin
+    integer function foo(integer x) begin
+        return (x)
+    end
+
+    integer x
+    x <= foo
+end

@@ -1,0 +1,22 @@
+% Tests function call expressions
+
+begin
+
+	procedure test1 begin
+
+		put "test1 sucess"
+		return
+
+	end
+
+	procedure test2(integer i) begin
+
+		put i
+		return
+
+	end
+
+	test1
+	test2(1)
+
+end

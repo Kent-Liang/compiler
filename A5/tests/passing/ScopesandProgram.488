@@ -1,0 +1,45 @@
+begin % S00 Start program scope.
+	integer x
+	integer scopeTest
+
+	scopeTest <= 5
+
+	% S06 Start ordinary scope.
+	begin
+		put "This should pass!"
+	% S07 End ordinary scope.
+	end
+
+	% S04 Start function scope.
+	integer function test1 begin
+		scopeTest <= 10
+		return (5)
+	% S05 End function scope.
+	end
+
+	% S08 Start procedure scope.
+	procedure test2 begin
+		scopeTest <= 10
+		put "Hello world", skip
+		return
+	% S09 End procedure scope
+	end
+
+	% Return-less procedure
+	procedure test3 begin
+		scopeTest <= 10
+		put "Hello world", skip
+	end
+	
+	x <= test1
+	test2 % Call procedure test
+	test3
+
+	% S03 Associate declarations and statements with scope.
+	if (scopeTest = 10) then 
+		put "S03 failed", skip
+	end
+
+
+% S01 End program scope.
+end 

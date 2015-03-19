@@ -1,0 +1,26 @@
+%  test  function and   procedure declarations
+ begin 
+     integer function A  
+	 begin  return(   1 )  end 
+     boolean function B   
+	 begin  return( false ) end 
+     integer function C ( integer D   ) 
+	 begin  return(  D ) end 
+     boolean function D ( boolean E   )  
+	 begin  return(  E ) end 
+     procedure F   begin  return  end 
+     F
+     procedure G ( integer H   ) 
+	 begin  return  end 
+     procedure I ( boolean J   , boolean K  , integer L   ) 
+	 begin  return  end  
+     I( B, D( true ), C( 17 ) )
+     integer function Z  
+	 begin  return(  0 ) end 
+     boolean function Y   
+	 begin  return(  true ) end 
+     integer function X ( integer A   , boolean B   ) 
+	 begin  return( 2 ) end 
+     G( 42 )
+ end 
+

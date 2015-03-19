@@ -1,0 +1,8 @@
+% S18 passing test
+begin 
+
+	procedure foo (integer x, boolean y) begin
+		procedure boo (integer x, boolean y) begin
+		end
+	end
+end

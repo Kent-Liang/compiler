@@ -1,0 +1,35 @@
+%S50 Check that exit statement is directly inside a loop
+%S51 Check that return is inside a function
+%S52 Check that return statement is inside a procedure.
+%S53 Check that a function body contains at least one return statement
+
+begin
+	integer z
+
+	%S50
+	exit
+	exit when (z < 0)
+
+	return
+
+	integer x
+	% A function should have a return
+	integer function test1 begin
+		put "Hello world", skip
+	end
+
+	% A procedure should have a return
+	procedure test2 begin
+		put "Hello world", skip
+	end
+
+
+	%Exit statement directly inside loop but nested in procedure/function
+	loop
+		procedure foo begin
+			exit
+		end
+	end
+	x <= test1
+	test2
+end

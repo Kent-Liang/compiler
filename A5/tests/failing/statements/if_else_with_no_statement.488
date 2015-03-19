@@ -1,0 +1,4 @@
+% if statement with no statement after else
+begin
+	if true then put 9 else end
+end

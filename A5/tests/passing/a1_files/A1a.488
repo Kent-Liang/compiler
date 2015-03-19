@@ -1,0 +1,36 @@
+begin
+	% declarations
+	integer x, y
+	integer z1, z2, z3, z4, z5, z6
+
+	boolean a, b
+	boolean c1, c2, c3, c4, c5, c6
+
+	% arithmetic operators
+	x <= -3
+	y <= 4
+
+	z1 <= x + y % 1
+	z2 <= x - y % -7
+	z3 <= x * y % -12
+	z4 <= x / y %
+
+	% logical operators
+	a <= true
+	b <= false
+
+	c1 <= ! a
+	c2 <= a & b
+	c3 <= a | c2
+
+	% comparison operators
+	x <= 6
+	y <= 2
+
+	c1 <= x = y
+	c2 <= x != y
+	c3 <= x < y
+	c4 <= y <= x
+	c5 <= x > y
+	c6 <= y >= x
+end

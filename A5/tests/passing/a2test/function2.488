@@ -1,0 +1,18 @@
+% This tests function syntax
+
+begin
+
+	integer function test1 begin
+		return (5)
+	end
+
+	integer function test2 (integer q) begin
+		return (6)
+	end
+
+	integer x
+
+	x <= test1
+	x <= test2(x)
+
+end

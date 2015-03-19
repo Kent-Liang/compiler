@@ -1,0 +1,10 @@
+% associativity with not equal and greater than
+% semantically incorrect as well
+begin
+    boolean a, b, c, exp
+    a <= true
+    b <= false
+    c <= false
+
+    exp <= b >= a != b
+end

@@ -1,0 +1,11 @@
+% S37 failing test
+begin
+	integer x
+	boolean y
+
+	x <= true
+	y <= 1
+
+	z <= 1
+
+end

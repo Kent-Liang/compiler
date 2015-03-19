@@ -1,0 +1,4 @@
+% array declaration with invalid bound 
+begin 
+	integer array[-3 ... -2]
+end

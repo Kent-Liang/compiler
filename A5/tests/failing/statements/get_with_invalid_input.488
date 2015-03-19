@@ -1,0 +1,5 @@
+% get with invalid 'input'
+begin
+	integer x
+	get get x
+end

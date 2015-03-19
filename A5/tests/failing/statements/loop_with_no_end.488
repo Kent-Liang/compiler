@@ -1,0 +1,5 @@
+% loop with no end
+begin
+	loop
+		put 9
+end

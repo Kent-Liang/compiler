@@ -1,0 +1,16 @@
+% S36 passing test
+
+begin
+
+	procedure foo (integer x, boolean y) begin
+		return
+	end
+
+	integer a
+	boolean b
+	a <= 1
+	b <= true
+	foo(a, b)
+	foo(2, false)
+
+end

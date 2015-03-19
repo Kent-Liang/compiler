@@ -1,0 +1,8 @@
+% Test the exit when statement
+
+begin
+        
+        loop
+                exit when true
+        end
+end

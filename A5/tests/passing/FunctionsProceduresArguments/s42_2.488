@@ -1,0 +1,7 @@
+begin
+    procedure foo begin
+        return
+    end
+
+    foo
+end

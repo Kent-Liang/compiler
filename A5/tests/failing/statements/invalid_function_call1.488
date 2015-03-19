@@ -1,0 +1,21 @@
+% invalid function call, missing argument
+begin
+	integer function positiveSum(integer n) begin
+
+		%Embeded function declaration
+		integer function ignoreSum(integer n) begin
+			if n = 0 then
+				return (0)
+			end
+			return (positiveSum(n-1))
+		end
+
+		if n = 0 then
+			return (0)
+		end
+		return ( n + ignoreSum(n-1) )
+	end
+	
+	integer sum
+	sum <= positiveSum()
+end

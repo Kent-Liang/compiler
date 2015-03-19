@@ -1,0 +1,10 @@
+% S37 passing test
+begin
+
+	integer x
+	boolean y
+
+	x <= 1
+	y <= true
+
+end

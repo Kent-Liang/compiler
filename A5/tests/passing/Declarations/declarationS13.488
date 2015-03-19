@@ -1,0 +1,19 @@
+% S13 passing test
+begin
+
+	integer x
+	x <= 0
+
+	procedure test begin
+
+		boolean y
+		y <= false
+
+		put x
+		put y
+
+	end
+
+	put x
+
+end

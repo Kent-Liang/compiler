@@ -1,0 +1,9 @@
+% S42 Check that the function or procedure has no parameters
+
+begin
+    procedure foo begin
+        return
+    end
+
+    foo(1)
+end

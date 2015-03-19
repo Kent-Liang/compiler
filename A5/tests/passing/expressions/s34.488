@@ -1,0 +1,27 @@
+%S34 Check that variable and expression in assignment are the same type
+
+begin
+    integer x
+    integer y
+
+    boolean j
+    boolean k
+
+    integer function foo begin
+        return (1)
+    end
+
+    boolean function moo begin
+        return (false)
+    end
+
+    x <= 1
+    x <= y
+    x <= foo
+
+    j <= true
+    j <= k
+    j <= moo
+
+    j <= { put skip yields true}
+end

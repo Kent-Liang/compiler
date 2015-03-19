@@ -1,0 +1,9 @@
+% invalid embedded scope(extra end)
+begin
+	integer k
+	k <= 5
+	while k < 10 do
+		exit
+	end
+	end
+end

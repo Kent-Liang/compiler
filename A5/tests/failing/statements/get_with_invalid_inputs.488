@@ -1,0 +1,5 @@
+% get with invalid "input"s
+begin
+	integer x, y, z
+	get x y,z 
+end

@@ -1,0 +1,52 @@
+%  test all forms of correct expressions
+ begin
+	% text constants
+        put "Hello World" , skip
+        put "goodby " , "cruel " , "world " , skip, skip
+	% primaries
+        integer I, J, K[10]
+	I < = 1
+	J < = -1
+        boolean P, Q, R[20]
+	P <= true
+	Q <= false
+	I <= K[J]
+        P <= R[K[J]]
+        K[J] <= 10
+        R[I+1] <= false
+	% just in time declaration
+       integer function F  begin  return ( 1 )  end
+       integer function G( integer H , boolean I ) begin  return ( 2 )    end
+	I < = F
+	J < = G( I , Q )
+       boolean function S begin  return ( false ) end
+       boolean function T( integer I , boolean P ) begin  return (  true ) end
+	R[F] <= S
+	R[G(I,false)] <= T( J , P )
+	% arithmetic expressions
+	I <= - J
+	I <= - - J
+	I <= J + K[10]
+        I <= G(I,false) - I
+        J <= J * F
+        I <= I / J
+        K[I+J*10/20] <= 3
+	J <= K[I+7] * F / G( I * J , false ) + - - - 3
+	% comparisons
+	P <= I < J
+	Q <= F < = G( 7 , true )
+	R[I] <= 7 = 10
+	Q <= G(7,true)! = G(-7,false)
+	P <= I > J
+        P <= I > = J
+	% boolean expressions
+	P <=! Q
+        P <=!!!! Q
+        P <= P| S
+	P <= S| T( I+1,! false )
+	Q <= P& Q
+        P <= S & T( - J ,! Q )
+        % anon functions
+        Q <= { boolean P  P <= false yields ! P }
+        K[ { integer Y  if Q then Y <= I + 1 else Y <= J - 1 end yields Y + 2 }] <= 7
+ end

@@ -1,0 +1,7 @@
+% S19 passing test
+begin
+
+	integer x[0..10, 100]
+	boolean y[-5..10, -10..-5]
+
+end

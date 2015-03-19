@@ -1,0 +1,9 @@
+% This tests a while loop
+
+begin
+        boolean x
+        x <= true
+        while (x) do
+                put "Hello world!"
+        end
+end

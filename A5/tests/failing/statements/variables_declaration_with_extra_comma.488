@@ -1,0 +1,4 @@
+% array declaration with extra comma
+begin
+	integer a,b,,c
+end

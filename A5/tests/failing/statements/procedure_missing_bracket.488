@@ -1,0 +1,6 @@
+% procedure with missing bracket
+begin
+	procedure proc(integer a begin
+		return
+	end
+end

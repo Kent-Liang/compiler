@@ -1,0 +1,87 @@
+% author: Winston Yeung
+begin
+	integer x
+	x <= 0
+
+	% Test no parameter procedure
+	procedure proc begin
+		put "hello world"
+                return
+        end
+
+	% Test single parameter procedure
+	procedure proc2(boolean x) begin
+		if x then
+			put "x is true"
+		else
+			put "x is false"
+		end
+                return
+	end
+
+	% Test multiple parameters procedure
+	procedure proc3(boolean x, boolean y, integer n, integer m) begin
+		if (x = y) & (n = m) then
+			put "values are equal"
+		else
+			put "values are not equal"
+		end
+                return
+	end
+
+        % Test no parameter function
+	boolean function foo begin
+		return (true)
+	end
+
+	% Test nested calls and calling a function from procedure
+	procedure proc4(boolean x) begin
+		proc
+		proc2(foo)
+                return
+	end
+
+	% Test scoping with procedures
+	procedure proc5 begin
+		x <= x + 1
+		put "The value of x:"
+		put x
+                return
+	end
+
+
+	% Test multiple parameter function
+	integer function add(integer x, integer y) begin
+		return (x + y)
+	end
+
+	% Test scoping with functions
+	integer function addx(integer y) begin
+		return (x + y)
+	end
+
+	% test function calling procedure and other functions
+	boolean function foo2 begin
+		proc
+		put add(1, 2) % should print 3
+		return (true)
+	end
+
+        % Testing anonymous function
+        put { put "1" yields 2} % should print 1 followed by 2
+
+	proc % should print hello world
+	proc2(true) % should print x is true
+	proc3(true, false, 3, 3) % should print values are not equal
+	proc4(true) % should print hello world followed by x is true
+	proc5 % should print 1
+
+	boolean f2
+
+	% x is now 1
+	put add(1, 2) % should print 3
+	put addx(3) % should print 4
+	f2 <= foo2 % should print hello world followed by 3
+	put 2 % prints true
+
+end

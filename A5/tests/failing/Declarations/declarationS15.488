@@ -1,0 +1,19 @@
+% S15 failing test
+begin
+
+	integer function boo (integer x, integer y, boolean z) begin
+		integer x
+		x <= 1
+		integer y
+		y <= 2
+		boolean z
+		z <= true
+		return (1)
+	end
+
+	procedure boo2 (boolean x, integer y) begin
+		x <= 1
+		y <= true
+	end
+	
+end

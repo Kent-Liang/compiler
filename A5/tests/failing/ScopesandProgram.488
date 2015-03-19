@@ -1,0 +1,15 @@
+% S03 Associate declarations and statements with scope.
+
+begin
+
+	begin
+		integer scopeTest
+		scopeTest <= 1
+	end
+
+	integer scopeTest2
+  boolean result
+
+	result <= scopeTest2 = scopeTest
+	% This should fail because scopeTest only exists in a different scope
+end

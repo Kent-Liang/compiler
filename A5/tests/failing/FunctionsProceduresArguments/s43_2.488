@@ -1,0 +1,9 @@
+%S43 Check that the number of arguments is equal to the number of formal parameters
+
+begin
+    procedure foo(integer x, integer y) begin
+        return
+    end
+
+    foo(1)
+end

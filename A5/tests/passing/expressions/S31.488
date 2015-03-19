@@ -1,0 +1,50 @@
+%S31 Check that type of expresison or variable is integer
+
+begin
+    integer x
+    integer y
+    integer z
+    integer r
+    boolean b
+
+    integer function foo begin
+        return (1)
+    end
+
+    z <= x + y
+    z <= x - y
+    z <= x * y
+    z <= x / y
+
+    z <= 1 + x
+    z <= x - 1
+    z <= x * 4
+    z <= x / 6
+
+    z <= {put skip yields 1} + {put skip yields 3}
+
+    z <= foo + x
+    z <= foo - y
+    z <= y * foo
+    z <= x / foo
+
+    b <= x > y
+    b <= x >= y
+    b <= x < y
+    b <= x <= y
+
+    b <= foo > y
+    b <= foo >= y
+    b <= foo < y
+    b <= y <= foo
+    r <= foo * y
+    r <= foo / y
+
+    b <= 1 > x
+    b <= 1 >= x
+    b <= 1 < x
+    b <= 1 <= x
+    r <= foo * 1
+    r <= foo / y
+
+end

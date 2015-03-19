@@ -1,0 +1,12 @@
+% S11 passing test
+begin
+
+	integer function test begin
+		return (1)
+	end
+
+	boolean function test2 begin
+		return (true)
+	end
+
+end

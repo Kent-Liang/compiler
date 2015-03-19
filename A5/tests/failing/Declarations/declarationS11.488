@@ -1,0 +1,18 @@
+% S11 failing test
+
+begin
+
+	integer function test begin
+
+		integer function test begin
+			return (1)
+		end
+		return (1)
+
+	end
+
+	boolean function test begin
+		return (true)
+	end
+
+end

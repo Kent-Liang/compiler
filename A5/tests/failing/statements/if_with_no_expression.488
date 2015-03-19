@@ -1,0 +1,4 @@
+% if statement follows with no expression
+begin
+	if then put 9 end
+end

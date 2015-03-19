@@ -1,0 +1,32 @@
+%S30 Check that type of expression is boolean
+
+begin
+
+    boolean x
+    boolean y
+    boolean z
+
+    boolean function foo begin
+        return (true)
+    end
+
+    z <= true & false
+    z <= true | false
+    z <= !true
+    z <= x & y
+    z <= x | y
+    z <= !x
+    z <= x & true
+    z <= x | true
+    z <= !(x & y)
+
+    z <= {put skip yields true} & false
+
+    z <= true & foo
+    z <= true | foo
+    z <= x & foo
+    z <= y & foo
+
+    z <= !foo
+
+end

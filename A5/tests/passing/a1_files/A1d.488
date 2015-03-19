@@ -1,0 +1,90 @@
+begin
+
+	integer k, tk
+	boolean b, tb
+	k <= 10
+	b <= true
+
+	% A procedure that just returns
+	procedure proc begin
+		return
+	end
+
+	% A procedure that has a single integer parameter
+	procedure procParam(integer x) begin
+		put x
+	end
+
+	% A procedure that has multiple parameters
+	procedure procMultParams(integer x, boolean y, integer z) begin
+		put x
+		put z
+	end
+
+	% A procedure that has a branch
+	procedure procBranch(integer x, boolean y, integer z) begin
+		if y then
+			put x
+			put z
+		else
+			put z
+			put x
+		end
+	end
+
+	% A function that returns true
+	boolean function func begin
+		return (true)
+	end
+
+	% A function that has a single integer parameter
+	boolean function funcParam(integer x) begin
+		return (x >= 10)
+	end
+	
+	% A function that has multiple parameters
+	integer function funcMultParams(integer x, boolean y, integer z) begin
+		return (x + z)
+	end
+
+	% A function that has a branch
+	integer function funcBranch(integer x, boolean y, integer z) begin
+		if y then
+			return (x + z)
+		else
+			return (x - z)
+		end
+	end
+
+	% A procedure that calls a function
+	procedure procCall begin
+		boolean t
+		t <= func
+	end
+	
+	% A function that calls a procedure
+	boolean function funcCall begin
+		proc
+		return (true)
+	end
+
+	% Call the procedures
+	proc
+	procParam(5)
+	% Call with a variable
+	procParam(k)
+	procMultParams(10, false, 5)
+	% Mix literals and variables
+	procBranch(10, b, 5)
+	procCall
+
+	% Call the functions
+	tb <= func
+	tb <= funcParam(5)
+	tb <= funcParam(k)
+	tk <= funcMultParams(10, b, 5)
+	tk <= funcBranch(10, false, 5)
+	tb <= funcCall
+	
+end
+

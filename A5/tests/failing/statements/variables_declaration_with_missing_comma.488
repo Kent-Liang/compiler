@@ -1,0 +1,4 @@
+% variables declaration with missing comma
+begin
+	integer a b,c
+end

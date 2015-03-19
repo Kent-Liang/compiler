@@ -1,0 +1,6 @@
+% a basic failing example (duplicated plus)
+begin
+    integer x,y
+    boolean a
+    a <= b * c + + y
+end

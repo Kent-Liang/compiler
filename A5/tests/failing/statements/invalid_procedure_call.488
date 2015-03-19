@@ -1,0 +1,8 @@
+% invalid procedure call, missing bracket
+begin
+	procedure helloworld (integer a) begin
+		return
+	end
+
+	helloworld 5)
+end

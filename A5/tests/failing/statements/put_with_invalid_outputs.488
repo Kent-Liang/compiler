@@ -1,0 +1,4 @@
+% put with invalid 'output's
+begin
+	put "z", skip "k"
+end

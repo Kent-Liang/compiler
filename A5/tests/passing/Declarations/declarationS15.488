@@ -1,0 +1,14 @@
+% S15 pasing test
+begin
+
+	integer function boo (integer x, integer y, boolean z) begin
+		put x
+		put y
+		put z
+		return (1)
+	end
+
+	procedure boo2 (integer x, boolean y) begin
+		return
+	end
+end

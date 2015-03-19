@@ -1,0 +1,5 @@
+% unary not with lower precedence trying to bind higher
+begin
+    boolean x
+    x <= false = !true
+end

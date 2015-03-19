@@ -1,0 +1,5 @@
+% assignment with no expression
+begin
+	boolean hello
+	hello <= 
+end

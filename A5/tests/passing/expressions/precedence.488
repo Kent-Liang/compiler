@@ -1,0 +1,63 @@
+begin
+
+	integer x, y, z, exp
+	boolean a, b, c, exp2
+
+	x <= 125
+	y <= 8315
+	z <= 1023
+
+	a <= true
+	b <= false
+	c <= false
+	
+	%Test precedence operators from each level individually.
+	
+	% 6 precedence: OR 
+	exp <= a | (b | c)
+	
+	% 5 precedence: AND 
+	exp <= a & (b & c)
+	
+	% 4 precedence: NOT 
+	% ! should come before & and |
+	exp <= !!!!!!!!!!!!!!!!!!!!!a & b
+	exp <= !!!!!!!!!!!!!!!!!!!!!a | b
+	
+	% 3 precedence: EQUAL|NOT EQUAL|LESS|LESS EQUAL|GREATER|GREATER EQUAL 
+	% semantically it's not correct (eg. true < false doesn't make sense)
+	exp <= (((((x = (y = z)) != x) < z) <= x) > y) >= z  
+	
+	% 2 precedence: PLUS | MINUS 
+	exp <= y * x / x + y - z
+	
+	% 1 precedence: DIVIDE | TIMES 
+	exp <= x * x / y
+	
+	% 0 precedence: MINUS 
+	exp <= x * -y
+
+	%Test precedence operators from each level in a mixture. With and without Integer and Boolean constants and ().
+	
+	%Test mixing levels of arithmatic operators with and without constants and (). 
+	exp <= x + y * z - x * (-z + 412) / x
+	exp <= y / -z + z + - z * - x
+	exp <= x - -y / x - -z + z 
+	
+	%Test overloading !
+	exp2 <= !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!a
+	
+	%Test combination of logical operators without ()
+	exp2 <= a & b | b & c | a
+	
+	%Test combination of logical operators with () and constant values
+	exp2 <= (a & b) | (b & true) | a
+	exp2 <= a = b |  b = c | !b
+
+	%Test combination of logical operators with equality operator and () and constat values
+	exp2 <= (!a = b) | (b = c) & !false
+	
+	%Test using () to fix precedence issue from failing tests
+	exp2 <= a = (!c)
+
+end

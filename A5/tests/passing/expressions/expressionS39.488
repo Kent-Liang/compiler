@@ -1,0 +1,7 @@
+% S39 passing test
+begin
+	procedure foo (integer x, boolean y) begin
+		put x
+		put y
+	end
+end 

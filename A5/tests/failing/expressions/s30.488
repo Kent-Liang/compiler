@@ -1,0 +1,24 @@
+%S30 Check that type of expression is boolean
+
+begin
+    integer function foo begin
+        return (1)
+    end
+
+    boolean x
+    integer y
+    integer z
+    integer f
+
+    x <= z & foo
+    x <= !z
+    x <= (z + y) & f
+    x <= f | (z - y)
+
+    x <= z & foo
+    x <= z | foo
+    x <= !foo
+
+    x <= {put skip yields 1} | 2
+    x <= !{put skip yields 4}
+end

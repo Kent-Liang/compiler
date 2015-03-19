@@ -1,0 +1,13 @@
+% S39 failing test
+begin
+
+	procedure foo (integer x, boolean y) begin
+
+		boolean x
+		integer y
+		x <= 1
+		y <= false
+
+	end
+
+end

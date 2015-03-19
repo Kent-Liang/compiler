@@ -1,0 +1,32 @@
+
+Test Cases:
+Symbol Table ( Can be found in the ScopesAndPrograms.488 test file)
+*Major Scoping (begin end, function, procedure)
+*Minor Scoping (if statement, while loop, loop end)
+
+AST Building
+*We don’t have time to manually construct and check AST Building, but we are reassured that it works since Semantic Analysis testing works properly
+*Semantic Analysis (All other test case files)
+
+Declarations
+*S46 Check that lower bound is<=upper bound.
+*Statement Checking
+*S50 Check that exit statement is directly inside a loop.
+*S51 Check that return is inside a function
+*S52 Check that return statement is inside a procedure.
+*S53 Check that a function body contains at least one return statement.
+*Expression Type Checking
+*S30 Check that type of expression is boolean.
+*S31 Check that type of expression or variable is integer.
+*S32 Check that left and right operand expressions are the same type.
+*S34 Check that variable and expression in assignment are the same type.
+*S35 Check that expression type matches the return type of enclosing function.
+*S36 Check that type of argument expression matches type of corresponding formal parameter.
+*S37 Check that identifier has been declared as a scalar variable.
+*S38 Check that identifier has been declared as an array.
+*S39 Check that identifier has been declared as a parameter.
+*Functions, procedures and arguments
+*S40 Check that identifier has been declared as a function.
+*S41 Check that identifier has been declared as a procedure.
+*S42 Check that the function or procedure has no parameters.
+*S43 Check that the number of arguments is equal to the number of formal parameters.

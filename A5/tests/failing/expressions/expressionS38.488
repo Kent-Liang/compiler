@@ -1,0 +1,6 @@
+% S38 failing test
+begin
+	boolean x[3], y
+	x[0] <= true
+	y[0] <= 2
+end

@@ -1,0 +1,14 @@
+begin
+    integer function foo (integer x) begin
+        return (x)
+    end
+
+    integer function foo2 (integer x, integer y) begin
+        return (x + y)
+    end
+
+    integer y
+    y <= foo(1)
+    integer z
+    z <= foo2(1, 2)
+end

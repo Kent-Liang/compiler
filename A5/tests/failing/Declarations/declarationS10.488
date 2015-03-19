@@ -1,0 +1,13 @@
+% S10 failing test
+begin
+
+	integer x
+	integer x
+
+	boolean y
+	boolean y
+
+	integer z
+	boolean z
+
+end

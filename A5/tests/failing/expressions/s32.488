@@ -1,0 +1,27 @@
+%S32 Check that left and right operand expressions are the same type
+
+begin
+    integer x
+    boolean y
+    boolean z
+
+    boolean function foo begin
+        return (true)
+    end
+
+    integer function loo begin
+        return (1)
+    end
+
+
+    z <= x = y
+    z <= x != y
+    z <= x = foo
+    z <= x != foo
+    z <= y = loo
+    z <= y != loo
+    z <= foo = loo
+    z <= foo != loo
+
+    z <= {put skip yields true} != {put skip yields 1}
+end

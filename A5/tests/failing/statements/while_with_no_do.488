@@ -1,0 +1,8 @@
+% while loop missing do
+begin
+	integer k
+	k <= 5
+	while k < 10
+		exit
+	end
+end

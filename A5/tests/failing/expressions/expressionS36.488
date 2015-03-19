@@ -1,0 +1,16 @@
+% S36 failing test
+
+begin
+
+	procedure foo (integer x, boolean y) begin
+		return
+	end
+
+	integer a
+	boolean b
+	a <= 1
+	b <= true
+	foo(b, a)
+	foo(false, 1)
+
+end

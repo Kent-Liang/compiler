@@ -1,0 +1,80 @@
+% Author: Chuang-Yu Chen
+
+begin
+
+	% recursive function with parameter that finds the power of two of the parameter
+	integer function power_of_two (integer n) begin
+
+		% nested function without parameter that checks if the power is 0
+		boolean function check_zero begin
+			if n <= 0
+				then
+					return (true)
+				else
+					return (false)
+			end
+		end
+
+		if check_zero
+			then
+				return (1)
+			else
+				return (2 * power_of_two(n-1))
+		end
+
+	end
+
+	integer x
+	x <= 128
+	% recusive function without parameter that finds the power of two from 128
+	integer function find_power_of_two begin
+
+		if x = 1
+			then
+				return (0)
+			else
+				x <= x/2
+				return (1 + find_power_of_two)
+		end
+	end
+
+	integer sum
+	sum <= 1
+	% recursive procedure with parameters that finds the factorial of parameter
+	procedure factorial (integer i) begin
+
+		% nested procedure with parameter that records the sum
+		procedure factorial_sum (integer num) begin
+			sum <= sum * num
+			return
+		end
+		if i > 0
+			then
+				factorial_sum(i)
+				factorial(i-1)
+		end
+		return
+	end
+
+	integer y
+	integer z
+	y <= 5
+	z <= 1
+	%recursive procedure without parameters that finds three to the power of five
+	procedure three_to_the_power_of_five begin
+		if y > 0
+		then
+				z <= z * 3
+				y <= y - 1
+				three_to_the_power_of_five
+				return
+		end
+	end
+
+  integer power
+	power <= power_of_two(4)
+	power <= find_power_of_two
+	factorial(10)
+	three_to_the_power_of_five
+
+end

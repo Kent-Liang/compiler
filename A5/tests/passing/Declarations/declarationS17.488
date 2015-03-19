@@ -1,0 +1,9 @@
+% S17 passing test
+begin
+	procedure boo begin
+		procedure foo begin
+		end
+	end
+	procedure foo begin
+	end
+end

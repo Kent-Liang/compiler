@@ -1,0 +1,33 @@
+%S35 Check that expression type matches the return type of enclosing function
+
+begin
+    boolean function foo begin
+        return (true)
+    end
+
+    integer function moo begin
+        return (1)
+    end
+
+    boolean function foo2 begin
+        boolean x
+        return (x)
+    end
+
+    integer function moo2 begin
+        integer y
+        return (y)
+    end
+
+    boolean function foo3 begin
+        return (foo)
+    end
+
+    integer function moo3 begin
+        return (moo)
+    end
+
+    boolean function foo4 begin
+        return ({put skip yields true})
+    end
+end

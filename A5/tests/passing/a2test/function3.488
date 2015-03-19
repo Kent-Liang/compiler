@@ -1,0 +1,20 @@
+% This tests procedure syntax
+
+begin
+
+	procedure test1 begin
+		put "Hello world", skip
+	end
+
+	procedure test2 (integer q) begin
+		put "Hello world", skip
+	end
+
+	integer x
+
+	x <= 5
+
+	test1
+	test2(x)
+
+end

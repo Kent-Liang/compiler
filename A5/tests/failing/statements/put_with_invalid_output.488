@@ -1,0 +1,4 @@
+% put with invalid 'output'
+begin
+	put put 9
+end

@@ -1,0 +1,88 @@
+begin 
+
+	%Procedure with parameters
+	procedure printLess(integer n) begin
+		if n > 0 then
+			put n
+			printLess(n-1)
+		end
+		return
+	end
+ 
+	%Procdedure without parameters
+	procedure waitForFiveOrMore begin
+		integer x
+		get x
+		if x > 5 then
+			return
+		else
+			waitForFiveOrMore
+		end
+		return
+	end
+
+	%Procedure without parameters  
+	%Procedure with nested procedure declarations
+	procedure levelA begin
+
+		%Embeded procedure declaration
+		procedure levelB begin
+			integer b
+			get b
+			if b = 2 then
+				return
+			end
+			levelA
+			return
+		end
+
+		integer a
+		get a
+		if a = 1 then
+			return
+		end
+		levelB
+		return
+	end
+ 
+	%Function with parameters
+	%Function with nested function delcaration
+	integer function positiveSum(integer n) begin
+
+		%Embeded function declaration
+		integer function ignoreSum(integer n) begin
+			if n = 0 then
+				return (0)
+			end
+			return (positiveSum(n-1))
+		end
+
+		if n = 0 then
+			return (0)
+		end
+		return ( n + ignoreSum(n-1) )
+	end
+
+	%Function without parameters
+	integer function largerThanFive begin
+		integer in
+		get in
+		if in <= 5 then
+			return ( largerThanFive )
+		end
+		return ( in )
+	end
+
+%Call the procedures
+printLess(5)
+waitForFiveOrMore
+levelA
+
+%Call the functions
+integer sum
+integer larger
+
+sum <= positiveSum(5)
+larger <= largerThanFive
+
+end

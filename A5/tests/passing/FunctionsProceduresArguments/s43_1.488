@@ -1,0 +1,12 @@
+begin
+    procedure foo(integer x) begin
+        return
+    end
+
+    procedure foo2(integer x, integer y) begin
+        return
+    end
+
+    foo(1)
+    foo2(1, 2)
+end

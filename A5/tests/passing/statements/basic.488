@@ -1,0 +1,98 @@
+begin
+	% Test empty embedded scope
+	begin end
+	% simple embedded scope
+	begin integer x end
+
+	% Variable declaration
+	integer x
+	boolean b
+	% Variable comma list, weird whitespace
+	integer w,y, z
+	boolean c, d,e
+	% Array declaration
+	integer xarr[1 .. 4, 5]
+	boolean barr[1 .. 2,5]
+
+	% Assignment
+	x <= 3
+	b <= false
+	xarr[1] <= 4
+	barr[1] <= true
+
+	% Condtional statements
+	if true then
+		put x
+	end
+	% with else
+	if false then
+		put x
+	else
+		put xarr[1]
+	end
+	% with complex expression
+	if x > 1 & 2 >= 3 | true & !false then
+		put x * 3
+	end
+
+	% Loops
+	% while loop
+	while false do
+		x <= x + 1
+	end
+	% loop exit
+	loop
+		x <= x + 1
+		exit
+	end
+	% loop exit when
+	loop
+		x <= x + 1
+		exit when x > 10
+	end
+
+	% Test get and put
+	get w
+	put w
+	% multiple
+	get w, y, z
+	put "z: ", z, skip, "y: ", y, skip, "w: ", w
+
+	% Procedure definitions
+	% basic
+	procedure proc begin
+		% test return
+		return
+	end
+	% nested scope
+	procedure proc2 begin
+		begin end
+		return
+	end
+	% parameters
+	procedure procParam(integer a, boolean b) begin
+	end
+
+	% Call procedures
+	proc
+	proc2
+	procParam(x, true)
+
+	% Function definitions
+	integer function func begin
+		% Test return an expression
+		return (1)
+	end
+	boolean function funcb begin
+		return (true)
+	end
+	% parameters
+	integer function funcParam(integer x, integer y) begin
+		return (x + y)
+	end
+
+	% Call functions
+	x <= func
+	b <= funcb
+	x <= funcParam(x, w)
+end
