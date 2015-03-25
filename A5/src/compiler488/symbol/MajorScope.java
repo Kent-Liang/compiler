@@ -28,8 +28,8 @@ import compiler488.symbol.SymbolTableEntry.SymbolKind;
 public class MajorScope {
 
 	public static enum ScopeKind {
-		PROCEDURE(2),
-		FUNCTION(2),
+		PROCEDURE(3), //return address, dynamic link, display register
+		FUNCTION(3), //return address, dynamic link, display register
 		PROGRAM(0),
 		NORMAL(0);
 		
@@ -137,7 +137,7 @@ public class MajorScope {
 	}
 	
 	public int getTotalVariables() {
-		return this.currentOffset;
+		return this.currentOffset - this.kind.getOffset();
 	}
 
 	@Override

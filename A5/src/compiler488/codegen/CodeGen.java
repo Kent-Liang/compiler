@@ -103,7 +103,7 @@ public class CodeGen implements ASTVisitor<Void> {
 	/** flag for tracing code generation */
 	private boolean traceCodeGen = Main.traceCodeGen;
 
-	private short currentAddress;
+	private short generationAddress;
 
 	private MajorScope currentScope;
 
@@ -119,7 +119,7 @@ public class CodeGen implements ASTVisitor<Void> {
 	 */
 	public CodeGen() {
 		// YOUR CONSTRUCTOR GOES HERE.
-		currentAddress = 0;
+		generationAddress = 0;
 	}
 
 	// Utility procedures used for code generation GO HERE.
@@ -160,7 +160,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		/********************************************************/
 
 		Machine.setPC((short) END_PRINT_STR); /* where code to be executed begins */
-		Machine.setMSP(currentAddress); /* where memory stack begins */
+		Machine.setMSP(generationAddress); /* where memory stack begins */
 		Machine.setMLP((short) (Machine.memorySize - 1));
 
 		return;
@@ -205,9 +205,9 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	private void assembly(short opcode, short... args) {
 		try {
-			Machine.writeMemory(currentAddress++, opcode);
+			Machine.writeMemory(generationAddress++, opcode);
 			for (short s : args) {
-				Machine.writeMemory(currentAddress++, s);
+				Machine.writeMemory(generationAddress++, s);
 			}
 		} catch (MemoryAddressException e) {
 			outputMemoryAddressError(e);
@@ -373,15 +373,70 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	private void CODEGEN_ADDR(IdentExpn expn) {
 		SymbolTableEntry e = currentScope.lookup(expn.getIdent());
+		
+		// look up the scopes
+		MajorScope ancestor = currentScope.getParent();
+		while(ancestor != null &&
+				e == null) {
+			e = ancestor.lookup(expn.getIdent());
+			ancestor = ancestor.getParent();
+		}
+		
 		ADDR(e.getLexicalLevel(), e.getOffset());
-
-		// return null;
 	}
 
-	private void CODEGEN_ADDR(SubsExpn e) {
-		// TODO fill in body for CODEGEN_ADDR - SymbolTable current scope offset
+	private void CODEGEN_ADDR(SubsExpn expn) {
 
-		// return null;
+		SymbolTableEntry e = currentScope.lookup(expn.getVariable());
+		
+		// look up the scopes
+		MajorScope ancestor = currentScope.getParent();
+		while(ancestor != null &&
+				e == null) {
+			e = ancestor.lookup(expn.getVariable());
+			ancestor = ancestor.getParent();
+		}
+		
+		Expn expr1 = expn.getSubscript1();
+		Expn expr2 = expn.getSubscript2();
+		
+		ArrayDeclPart decl = (ArrayDeclPart) e.getNode();
+		int lowerBound1 = decl.getLowerBoundary1();
+
+		if (decl.isTwoDimensional()) {
+			/* 2-D Array */
+			int upperBound2 = decl.getUpperBoundary2();
+			int lowerBound2 = decl.getLowerBoundary2();
+			
+			PUSH(upperBound2 - lowerBound2 + 1);
+			
+			CODEGEN(expr1);  // (expr1 - LB1 + 1)
+			PUSH(lowerBound1 - 1); // (expr1 - (LB1 - 1)) == (expr1 - LB1 + 1)
+			SUB();
+			
+			MUL(); // (UB2 - LB2 + 1) * (expr1 - LB1 + 1)
+			
+			CODEGEN(expr2); 
+			PUSH(lowerBound2);
+			SUB(); // (expr2 - LB2)
+			
+			ADD(); 
+			
+			// get the address of the start of the array
+			ADDR(e.getLexicalLevel(), e.getOffset());
+			ADD();
+		} else {
+			/* 1-D Array */
+			CODEGEN(expr1); 
+			PUSH(lowerBound1);
+			SUB();
+			
+			// get the address of the start of the array
+			ADDR(e.getLexicalLevel(), e.getOffset());
+			ADD();
+		}
+		
+		// top of the stack is now the address of the element
 	}
 
 	@Override
@@ -400,16 +455,10 @@ public class CodeGen implements ASTVisitor<Void> {
 	}
 
 	@Override
-	public Void visit(ArrayDeclPart decl) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Void visit(ArrayDeclPart decl) {return null;}
 
-	@Override
-	public Void visit(Declaration decl) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	@Override 
+	public Void visit(Declaration decl) {return null;}
 
 	@Override
 	public Void visit(MultiDeclarations decl) {
@@ -420,7 +469,7 @@ public class CodeGen implements ASTVisitor<Void> {
 	public Void visit(RoutineDecl decl) {
 		// C34
 		SymbolTableEntry e = currentScope.lookup(decl.getName());
-		e.setOffset(currentAddress);
+		e.setOffset(generationAddress);
 
 		// TODO Auto-generated method stub
 		return null;
@@ -435,6 +484,105 @@ public class CodeGen implements ASTVisitor<Void> {
 	@Override
 	public Void visit(AnonFuncExpn expn) {
 		// TODO Auto-generated method stub
+		/*
+		 * 
+		 % entry
+		PUSH UNDEFINED	% Allocate return value space
+			
+		PUSH <Address of 2-17-1>% Save the return address.
+		ADDR <caller>2 0		% Save the dynamic link.
+		
+		ADDR <anonymous fn>3 0		% save the display register
+			
+		PUSHMT		% update the display register
+		PUSH 3 			% num(args) + num(variables) + 3
+		SUB
+	
+		SETD 3
+
+		% anonymous function exit
+		ADDR 3 -1		% Store the return address below the activation record
+		SWAP
+		STORE
+		
+		SETD 3			% Restore display register value
+		
+		POP			% Pop dynamic link
+		BR			% Branch back to the return address
+
+		 */
+		// return value
+		PUSH(Machine.UNDEFINED);
+		
+		// return address
+		short rtnAddr = generationAddress;
+		PUSH(++rtnAddr);
+		
+		// save dynamic link
+		ADDR(currentScope.getLexicalLevel(), 0);
+		
+		// save display register
+		ADDR(currentScope.getLexicalLevel() + 1, 0);
+
+		// set the display register of the anonymous functions lexical level
+		PUSHMT();
+		PUSH(3);
+		SUB();
+		
+		SETD(currentScope.getLexicalLevel() + 1);
+
+		// allocate storage for variables
+		int variableSize = expn.getScope().getTotalVariables();
+		System.out.println("Anon symbol table: " + expn.getScope());
+		System.out.println("Anon number of variables: " + variableSize);
+		if(variableSize > 0) {
+			PUSH(Machine.UNDEFINED);
+			PUSH(variableSize);
+			DUPN();
+		}
+		
+		// set the scope correctly
+		MajorScope before = currentScope;
+		currentScope = expn.getScope();
+		
+		// generate the body code
+		CODEGEN(expn.getBody());
+		
+		// generate the yield expression
+		CODEGEN(expn.getExpn());
+		
+		// reset the scope
+		currentScope = before;
+		
+		// exit code
+		
+		// store the return value at the top of the stack, below the activation record
+		ADDR(currentScope.getLexicalLevel() + 1, -1);
+		SWAP();
+		STORE();
+
+		
+		// de allocate
+		if(variableSize > 0) {
+			PUSH(variableSize);
+			POPN();
+		}
+		
+		// reset the old display register's value
+		
+		// skip setting the display register, if the old value is undefined
+		
+		SETD(currentScope.getLexicalLevel() + 1);
+		
+		// remove dynamic link
+		POP();
+		
+		// return to return address
+		BR();
+		
+		// patch to here
+		patchAddress(rtnAddr, generationAddress);
+		
 		return null;
 	}
 
@@ -465,7 +613,8 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(BoolConstExpn expn) {
-		short machineVal = expn.getValue() ? Machine.MACHINE_TRUE
+		short machineVal = expn.getValue() ? 
+				Machine.MACHINE_TRUE
 				: Machine.MACHINE_FALSE;
 		PUSH(machineVal);
 
@@ -475,9 +624,15 @@ public class CodeGen implements ASTVisitor<Void> {
 	@Override
 	public Void visit(BoolExpn expn) {
 		String op = expn.getOpSymbol();
-
+		short addr;
 		if (op.equals("&")) {
 			CODEGEN(expn.getLeft());
+			DUP();
+			addr = generationAddress;
+			PUSH(++addr);
+			BF();
+			
+			// Demorgans
 			PUSH(Machine.MACHINE_FALSE);
 			EQ();
 			CODEGEN(expn.getRight());
@@ -486,13 +641,21 @@ public class CodeGen implements ASTVisitor<Void> {
 			OR();
 			PUSH(Machine.MACHINE_FALSE);
 			EQ();
+			patchAddress(addr, generationAddress); 
 		} else if (op.equals("|")) {
 			CODEGEN(expn.getLeft());
+			DUP();
+			PUSH(Machine.MACHINE_FALSE);
+			EQ();
+			addr = generationAddress;
+			PUSH(++addr);
+			BF();
 			CODEGEN(expn.getRight());
 			OR();
+			patchAddress(addr, generationAddress); 
 		}
 
-		// TODO: SHORT-CIRCUITING
+		// TODO: SHORT-CIRCUITING/CONDITIONAL
 
 		return null;
 	}
@@ -583,7 +746,11 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(NotExpn expn) {
-		// TODO Auto-generated method stub
+		
+		CODEGEN(expn.getOperand());
+		PUSH(Machine.MACHINE_FALSE);
+		EQ();
+		
 		return null;
 	}
 
@@ -597,17 +764,20 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(SubsExpn expn) {
-		// TODO Auto-generated method stub
+		
+		CODEGEN_ADDR(expn);
+		LOAD();
+		
 		return null;
 	}
 
 	private void makePrintStringProcedure() {
 		// make the address of the function independent of where I call this
 		// function
-		BEGIN_PRINT_STR = currentAddress;
+		BEGIN_PRINT_STR = generationAddress;
 
 		// dup the character
-		short loopAddr = currentAddress;
+		short loopAddr = generationAddress;
 		DUP();
 
 		// check if the character is 0
@@ -619,7 +789,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		EQ();
 
 		// branch to the end of this loop
-		short curAddr = currentAddress;
+		short curAddr = generationAddress;
 		PUSH(curAddr + 7);
 		BF();
 
@@ -636,7 +806,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		// branch back to the address given
 		BR();
 
-		END_PRINT_STR = currentAddress;
+		END_PRINT_STR = generationAddress;
 	}
 
 	@Override
@@ -644,7 +814,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		// C52
 
 		// push the return instruction address
-		short addressToPatch = currentAddress;
+		short addressToPatch = generationAddress;
 		PUSH(++addressToPatch);
 
 		// push all the characters
@@ -660,7 +830,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		BR();
 
 		// patch the incorrect return address created up above
-		patchAddress(addressToPatch, currentAddress);
+		patchAddress(addressToPatch, generationAddress);
 
 		return null;
 	}
@@ -673,7 +843,10 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(UnaryMinusExpn expn) {
-		// TODO Auto-generated method stub
+		
+		CODEGEN(expn.getOperand());
+		NEG();
+		
 		return null;
 	}
 
@@ -684,10 +857,10 @@ public class CodeGen implements ASTVisitor<Void> {
 	 */
 	@Override
 	public Void visit(AssignStmt stmt) {
-		// TODO Auto-generated method stub
 		CODEGEN_ADDR(stmt.getLval());
 		CODEGEN(stmt.getRval());
 		STORE();
+		
 		return null;
 	}
 	
@@ -700,13 +873,13 @@ public class CodeGen implements ASTVisitor<Void> {
 	@Override
 	public Void visit(ExitStmt stmt) {
 		// TODO Auto-generated method stub
-		short exit_addr = currentAddress;
+		short exit_addr = generationAddress;
 		//exit when
 		if (stmt.getExpn() != null){
 			CODEGEN(stmt.getExpn());
 			PUSH(Machine.MACHINE_FALSE);
 			EQ();
-			exit_addr = currentAddress;
+			exit_addr = generationAddress;
 			PUSH(exit_addr);
 			BF();
 		}else{
@@ -742,21 +915,21 @@ public class CodeGen implements ASTVisitor<Void> {
 		CODEGEN(stmt.getCondition());
 		// If there is no else statement in the if statement,
 		// then the else_addr is the end of the if statement.
-		short else_addr = currentAddress;
+		short else_addr = generationAddress;
 		PUSH(else_addr);
 		BF();
 		CODEGEN(stmt.getWhenTrue());
 
 		// If statement with else
 		if (stmt.getWhenFalse() != null) {
-			short end_of_ifstmt_addr = currentAddress;
+			short end_of_ifstmt_addr = generationAddress;
 			PUSH(end_of_ifstmt_addr);
 			BR();
-			patchAddress(++else_addr, currentAddress);
+			patchAddress(++else_addr, generationAddress);
 			CODEGEN(stmt.getWhenFalse());
-			patchAddress(++end_of_ifstmt_addr, currentAddress);
+			patchAddress(++end_of_ifstmt_addr, generationAddress);
 		} else {
-			patchAddress(++else_addr, currentAddress);
+			patchAddress(++else_addr, generationAddress);
 		}
 		return null;
 	}
@@ -776,14 +949,14 @@ public class CodeGen implements ASTVisitor<Void> {
 	@Override
 	public Void visit(LoopStmt stmt) {
 		// TODO Auto-generated method stub
-		short start_loop = currentAddress;
+		short start_loop = generationAddress;
 		CODEGEN(stmt.getBody());
 		PUSH(start_loop);
 		BR();
 		//Patching the address for exit/exit when
 		for (int addr: patch_addr){
 			addr ++;
-			patchAddress((short)addr, currentAddress);
+			patchAddress((short)addr, generationAddress);
 		}
 		//Clean up the array list
 		patch_addr.clear();
@@ -852,11 +1025,10 @@ public class CodeGen implements ASTVisitor<Void> {
 	public Void visit(ReturnStmt stmt) {
 		// TODO Auto-generated method stub
 		// This is a function
-		short addr = currentAddress;
 		if (stmt.getValue() != null) {
 			CODEGEN(stmt.getValue());
-			addr = currentAddress;
 		}
+		short addr = ++generationAddress;
 		PUSH(addr);
 		BR();
 		patch_addr.add((int)addr);
@@ -896,15 +1068,15 @@ public class CodeGen implements ASTVisitor<Void> {
 	@Override
 	public Void visit(WhileDoStmt stmt) {
 		// TODO Auto-generated method stub
-		short start_while = currentAddress;
+		short start_while = generationAddress;
 		CODEGEN(stmt.getExpn());
-		short end_of_while_addr = currentAddress;
+		short end_of_while_addr = generationAddress;
 		PUSH(end_of_while_addr);
 		BF();
 		CODEGEN(stmt.getBody());
 		PUSH(start_while);
 		BR();
-		patchAddress(++end_of_while_addr, currentAddress);
+		patchAddress(++end_of_while_addr, generationAddress);
 		return null;
 	}
 

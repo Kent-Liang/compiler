@@ -4,6 +4,7 @@ import compiler488.ast.ASTList;
 import compiler488.ast.ASTVisitor;
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.stmt.Stmt;
+import compiler488.symbol.MajorScope;
 
 /**
  * Represents the parameters and instructions associated with a function or
@@ -15,6 +16,8 @@ public class AnonFuncExpn extends Expn {
 
     /** The expression whose value is yielded. */
     private Expn expn;
+
+	private MajorScope scope;
 
     public AnonFuncExpn(ASTList<Stmt> body, Expn expn) {
         super();
@@ -49,5 +52,13 @@ public class AnonFuncExpn extends Expn {
     public <T> T accept(ASTVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
+	public void setScope(MajorScope currentScope) {
+		this.scope = currentScope;
+	}
+	
+	public MajorScope getScope() {
+		return this.scope;
+	}
     
 }

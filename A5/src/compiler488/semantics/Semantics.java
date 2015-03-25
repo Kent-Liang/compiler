@@ -436,7 +436,7 @@ public class Semantics implements ASTVisitor<Boolean> {
   		LoopingStmt old = currentLoop;
   		currentLoop = null;
 
-    	enterScope(ScopeKind.FUNCTION, null);
+    	currentScope = enterScope(ScopeKind.FUNCTION, null);
     	
     	if(!expn.getBody().accept(this)) {
     		return false;
@@ -445,7 +445,9 @@ public class Semantics implements ASTVisitor<Boolean> {
     		return false;
     	}
     	
-    	exitScope();
+    	expn.setScope(currentScope);
+    	
+    	currentScope = exitScope();
     	
   		currentLoop = old;
 

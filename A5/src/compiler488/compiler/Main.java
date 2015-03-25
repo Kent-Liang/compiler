@@ -3,11 +3,9 @@ package compiler488.compiler;
 import java.io.*;
 
 import compiler488.parser.*;
-import compiler488.ast.ASTVisitor ;
 import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.stmt.Program;
 import compiler488.semantics.Semantics;
-import compiler488.symbol.MajorScope;
 import compiler488.codegen.CodeGen;
 import compiler488.runtime.*;
 
