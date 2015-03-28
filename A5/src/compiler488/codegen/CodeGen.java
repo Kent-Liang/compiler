@@ -454,7 +454,7 @@ public class CodeGen implements ASTVisitor<Void> {
 			PUSH(upperBound2 - lowerBound2 + 1);
 			
 			CODEGEN(expr1);  // (expr1 - LB1 + 1)
-			PUSH(lowerBound1 - 1); // (expr1 - (LB1 - 1)) == (expr1 - LB1 + 1)
+			PUSH(lowerBound1); // 0 indexed
 			SUB();
 			
 			MUL(); // (UB2 - LB2 + 1) * (expr1 - LB1 + 1)
