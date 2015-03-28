@@ -14,15 +14,23 @@ public class SymbolTableEntry {
 		PROCEDURE
 	}
 	
+	public static enum DeclarationContext {
+		VARIABLE,
+		PARAMETER,
+		NONE
+	}
+	
 	private String varname;
 	private Type type;
 	private SymbolKind kind; // can be either array, variable, function, procedure
 	private AST node;
-	private short offset;
+	private int offset;
 	private int lexicalLevel;
+	
+	private DeclarationContext context = DeclarationContext.NONE;
 
 	public SymbolTableEntry(String varname, Type type, SymbolKind identifierType,
-			AST node, short offset) {
+			AST node, int offset) {
 		this.varname = varname;
 		this.type = type;
 		this.kind = identifierType;
@@ -46,12 +54,12 @@ public class SymbolTableEntry {
 		return node;
 	}
 	
-	public short getOffset() {
+	public int getOffset() {
 		return offset;
 	}
 
 
-	public void setOffset(short offset) {
+	public void setOffset(int offset) {
 		this.offset = offset;
 	}
 
@@ -83,5 +91,13 @@ public class SymbolTableEntry {
 	
 	public int getLexicalLevel() {
 		return this.lexicalLevel;
+	}
+
+	public DeclarationContext getContext() {
+		return context;
+	}
+
+	public void setContext(DeclarationContext ctx) {
+		this.context = ctx;
 	}
 }

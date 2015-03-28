@@ -56,6 +56,7 @@ import compiler488.ast.stmt.WhileDoStmt;
 import compiler488.ast.type.BooleanType;
 import compiler488.symbol.MajorScope.ScopeKind;
 import compiler488.symbol.SymbolTableEntry;
+import compiler488.symbol.SymbolTableEntry.DeclarationContext;
 import compiler488.symbol.SymbolTableEntry.SymbolKind;
 import compiler488.symbol.MajorScope;
 
@@ -184,10 +185,11 @@ public class Semantics implements ASTVisitor<Boolean> {
 		
 		return null;
 	}
-
-	private void addEntry(String varname, Type type, SymbolKind kind, AST node) {
-		currentScope.addEntry(varname, type, kind, node);
+	
+	private void addEntry(String varname, Type type, SymbolKind kind, AST node, DeclarationContext context) {
+		currentScope.addEntry(varname, type, kind, node, context);
 	}
+
 
 	private MajorScope enterScope(ScopeKind kind, RoutineDecl routine) {
 		MajorScope next = new MajorScope(currentScope, kind, routine);
@@ -321,7 +323,7 @@ public class Semantics implements ASTVisitor<Boolean> {
         }
         
         // S19 S48
-        addEntry(decl.getName(), decl.getType(), SymbolKind.ARRAY, decl);
+        addEntry(decl.getName(), decl.getType(), SymbolKind.ARRAY, decl, DeclarationContext.VARIABLE);
 
 		return true;
 	}
@@ -358,15 +360,15 @@ public class Semantics implements ASTVisitor<Boolean> {
         if (decl.getType() == null) {
         	// procedure has no return type
 	        if (lookup(decl.getName(), true) == null){
-	            addEntry(decl.getName(), decl.getType(), SymbolKind.PROCEDURE, decl);
+	            addEntry(decl.getName(), decl.getType(), SymbolKind.PROCEDURE, decl, DeclarationContext.NONE);
 	        } else {
 	            outputAlreadyDeclaredError(decl, decl.getName());
 	            return false;
 	        }
         } else {
         	// function
-	        if (lookup(decl.getName(), true) == null){
-	            addEntry(decl.getName(), decl.getType(), SymbolKind.FUNCTION, decl);
+	        if (lookup(decl.getName(), true) == null) {
+	            addEntry(decl.getName(), decl.getType(), SymbolKind.FUNCTION, decl, DeclarationContext.NONE);
 	        } else {
 	            outputAlreadyDeclaredError(decl, decl.getName());
 	            return false;
@@ -388,7 +390,7 @@ public class Semantics implements ASTVisitor<Boolean> {
     	for(ScalarDecl parameter : parameters) {
       		// S10
       		if ( lookup(parameter.getName(), true) == null) {
-      			addEntry(parameter.getName(), parameter.getType(), SymbolKind.SCALAR, parameter);
+      			addEntry(parameter.getName(), parameter.getType(), SymbolKind.SCALAR, parameter, DeclarationContext.PARAMETER);
       		} else {
                 outputAlreadyDeclaredError(parameter, parameter.getName());
       			declParameters = false;
@@ -423,9 +425,10 @@ public class Semantics implements ASTVisitor<Boolean> {
   	public Boolean visit(ScalarDecl decl) {
   		// S10
   		if ( lookup(decl.getName(), true) == null) {
-  			addEntry(decl.getName(),decl.getType(), SymbolKind.SCALAR, decl);
+  			addEntry(decl.getName(),decl.getType(), SymbolKind.SCALAR, decl, DeclarationContext.VARIABLE);
   			return true;
   		}
+  		
         outputAlreadyDeclaredError(decl, decl.getName());
   		return false;
   	}

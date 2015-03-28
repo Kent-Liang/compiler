@@ -6,6 +6,7 @@ import java.util.List;
 import compiler488.ast.AST;
 import compiler488.ast.decl.RoutineDecl;
 import compiler488.ast.type.Type;
+import compiler488.symbol.SymbolTableEntry.DeclarationContext;
 import compiler488.symbol.SymbolTableEntry.SymbolKind;
 
 /** Symbol Table
@@ -28,8 +29,8 @@ import compiler488.symbol.SymbolTableEntry.SymbolKind;
 public class MajorScope {
 
 	public static enum ScopeKind {
-		PROCEDURE(3), //return address, dynamic link, display register
-		FUNCTION(3), //return address, dynamic link, display register
+		PROCEDURE(2), //return address, dynamic link, variables/params, display register
+		FUNCTION(2), //return address, dynamic link, variables/params, display register
 		PROGRAM(0),
 		NORMAL(0);
 		
@@ -47,7 +48,8 @@ public class MajorScope {
 	private ScopeKind kind;
 	private RoutineDecl routine;
 	
-	private int currentOffset;
+	private int variableSize;
+	private int parameterSize;
 	private int lexicalLevel;
 	
 	// tree structure to keep the symbol table persistent
@@ -65,25 +67,28 @@ public class MajorScope {
         this.routine = routine;
         this.children = new ArrayList<MajorScope>(0);
         
-        this.currentOffset = kind.getOffset();
+        this.parameterSize = 0;
+        this.variableSize = 0;
     }
 
 	public SymbolTableEntry lookup(String varname) {
 		return symbolTable.lookup(varname);
 	}
 
-	public void addEntry(String varname, Type type, SymbolKind kind, AST node) {
-		SymbolTableEntry e = symbolTable.addEntry(varname, type, kind, node, currentOffset);
-		e.setLexicalLevel(this.lexicalLevel);
-		currentOffset += e.getSize();
-	}
-	
-	private void addEntry(SymbolTableEntry e) {
-		e.setLexicalLevel(this.lexicalLevel);
-		e.setOffset((short)currentOffset);
-		symbolTable.addEntry(e);
+	public void addEntry(String varname, Type type, SymbolKind kind, AST node,
+			DeclarationContext context) {
+		int offset = this.kind.getOffset() + parameterSize + variableSize;
 		
-		currentOffset += e.getSize();
+		SymbolTableEntry e = symbolTable.addEntry(varname, type, kind, node, offset, context);
+		e.setLexicalLevel(this.lexicalLevel);
+		
+		// parameter size already calculated
+		System.out.println(varname + " " + offset);
+		if(context == DeclarationContext.VARIABLE) {
+			variableSize += e.getSize();
+		} else if(context == DeclarationContext.PARAMETER) {
+			parameterSize += e.getSize();
+		}
 	}
 
 	public ScopeKind getKind() {
@@ -136,8 +141,12 @@ public class MajorScope {
 		this.lexicalLevel = lexicalLevel;
 	}
 	
-	public int getTotalVariables() {
-		return this.currentOffset - this.kind.getOffset();
+	public int getVariableSize() {
+		return this.variableSize;
+	}
+	
+	public int getParameterSize() {
+		return this.parameterSize;
 	}
 
 	@Override
@@ -150,7 +159,17 @@ public class MajorScope {
 
 	public void merge(MajorScope scope) {
 		for(SymbolTableEntry e : scope.symbolTable.getEntries()) {
-			this.addEntry(e);
+			int offset = kind.getOffset() + parameterSize + variableSize;
+			
+			e.setLexicalLevel(this.lexicalLevel);
+			e.setOffset(offset);
+			symbolTable.addEntry(e);
+
+			if(e.getContext() == DeclarationContext.VARIABLE) {
+				variableSize += e.getSize();
+			} else {
+				parameterSize += e.getSize();
+			}
 		}
 	}
 }

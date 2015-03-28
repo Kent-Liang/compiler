@@ -564,12 +564,10 @@ public class CodeGen implements ASTVisitor<Void> {
 		SETD(currentScope.getLexicalLevel() + 1);
 
 		// allocate storage for variables
-		int variableSize = expn.getScope().getTotalVariables();
-		System.out.println("Anon symbol table: " + expn.getScope());
-		System.out.println("Anon number of variables: " + variableSize);
-		if(variableSize > 0) {
+		int totalVariablesSize = expn.getScope().getVariableSize() + expn.getScope().getParameterSize();
+		if(totalVariablesSize > 0) {
 			PUSH(Machine.UNDEFINED);
-			PUSH(variableSize);
+			PUSH(totalVariablesSize);
 			DUPN();
 		}
 		
@@ -595,8 +593,8 @@ public class CodeGen implements ASTVisitor<Void> {
 
 		
 		// de allocate
-		if(variableSize > 0) {
-			PUSH(variableSize);
+		if(totalVariablesSize > 0) {
+			PUSH(totalVariablesSize);
 			POPN();
 		}
 		
@@ -759,7 +757,8 @@ public class CodeGen implements ASTVisitor<Void> {
 		// Return value
 		PUSH(Machine.UNDEFINED);
 		// Return address. Will patch after BR statement is written.
-		short returnAddressPatch = (short)(generationAddress + 1);
+		short returnAddressPatch = (short)(generationAddress - 1);
+		
 		PUSH(Machine.UNDEFINED);
 		// Dynamic link
 		ADDR(currentScope.getLexicalLevel(), 0);
@@ -1028,10 +1027,12 @@ public class CodeGen implements ASTVisitor<Void> {
 	@Override
 	public Void visit(ProcedureCallStmt stmt) {
 		// Return address
-		short returnAddressPatch = generationAddress;
 		PUSH(Machine.UNDEFINED);
+		short returnAddressPatch = (short)(generationAddress - 1);
+		
 		// Dynamic link
 		ADDR(currentScope.getLexicalLevel(), 0);
+		
 		// Arguments.
 		for (Expn argument : stmt.getArguments()) {
 			CODEGEN(argument);
@@ -1063,17 +1064,26 @@ public class CodeGen implements ASTVisitor<Void> {
 		routinePatchAddresses.add(new ArrayList<RoutinePatchEntry>());
 		pendingRoutines.add(new ArrayList<RoutineDecl>());
 
+//		TRON();
 		// C00
 		PUSHMT();
 		SETD(0);
+		
+		currentScope = stmt.getScope();
 
-		this.visit((Scope) stmt);
+		// C30, C31, C32, C37
+		PUSH(Machine.UNDEFINED);
+		PUSH(currentScope.getVariableSize() + currentScope.getParameterSize());
+		DUPN();
+
+		CODEGEN(stmt.getBody());
 
 		// C01
 		HALT();
 
 		// Generate code for any local functions.
 		visitPendingRoutines();
+//		TROFF();
 
 		// C02
 		// finalize the machine state.
@@ -1108,7 +1118,7 @@ public class CodeGen implements ASTVisitor<Void> {
 				: routinePatchAddresses.get(routinePatchAddresses.size() - 1)) {
 			patchAddress(
 				routinePatchEntry.memoryAddress
-				, routinePatchEntry.routineSymbol.getOffset());
+				, (short)routinePatchEntry.routineSymbol.getOffset());
 		}
 		// Done patching references.
 		routinePatchAddresses.remove(routinePatchAddresses.size() - 1);
@@ -1120,6 +1130,7 @@ public class CodeGen implements ASTVisitor<Void> {
 	private void visitPendingRoutine(RoutineDecl routineDecl) {
 		// New routine, new routinePatch list.
 		routinePatchAddresses.add(new ArrayList<RoutinePatchEntry>());
+		pendingRoutines.add(new ArrayList<RoutineDecl>());
 
 		// Mark the start of the routine.
 		SymbolTableEntry routineSymbol =
@@ -1130,10 +1141,12 @@ public class CodeGen implements ASTVisitor<Void> {
 		// Update scope
 		MajorScope previousScope = currentScope;
 		currentScope = routineBody.getScope();
-
-		// Allocate parameter and local variable space.
-		for (int i = 0; i < currentScope.getTotalVariables(); ++i) {
+		
+		// Allocate local variable space.
+		if(currentScope.getVariableSize() > 0){
 			PUSH(Machine.UNDEFINED);
+			PUSH(currentScope.getVariableSize());
+			DUPN();
 		}
 
 		// Save the display register.
@@ -1144,7 +1157,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		//           + 1 (displaySave)
 		//           + 1 (dynamicLink)
 		//           + 1 (returnAddress)
-		PUSH(currentScope.getTotalVariables() + 3);
+		PUSH(currentScope.getVariableSize() + currentScope.getParameterSize() + 3);
 		SUB();
 		SETD(currentScope.getLexicalLevel());
 
@@ -1167,7 +1180,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		SETD(currentScope.getLexicalLevel());
 
 		// Pop the parameters and variables.
-		PUSH(currentScope.getTotalVariables());
+		PUSH(currentScope.getVariableSize() + currentScope.getParameterSize());
 		POPN();
 
 		// Pop the dynamic link.
@@ -1212,13 +1225,12 @@ public class CodeGen implements ASTVisitor<Void> {
 	 */
 	@Override
 	public Void visit(ReturnStmt stmt) {
-		// TODO Auto-generated method stub
 		// This is a function
 		if (stmt.getValue() != null) {
 			CODEGEN(stmt.getValue());
 		}
-		short addr = ++generationAddress;
-		PUSH(addr);
+		PUSH(Machine.UNDEFINED);
+		short addr = (short)(generationAddress - 1);
 		BR();
 		return null;
 	}
@@ -1226,17 +1238,14 @@ public class CodeGen implements ASTVisitor<Void> {
 	@Override
 	public Void visit(Scope stmt) {
 		// C03
+		MajorScope old = currentScope;
 		currentScope = stmt.getScope();
-
-		// C30, C31, C32, C37
-		PUSH(Machine.UNDEFINED);
-		PUSH(currentScope.getTotalVariables());
-		DUPN();
-
+		
 		// generate code for the body
 		CODEGEN(stmt.getBody());
 
 		// C04
+		currentScope = old;
 
 		return null;
 	}

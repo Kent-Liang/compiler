@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import compiler488.ast.AST;
 import compiler488.ast.type.Type;
+import compiler488.symbol.SymbolTableEntry.DeclarationContext;
 import compiler488.symbol.SymbolTableEntry.SymbolKind;
 
 /** Symbol Table
@@ -60,7 +61,7 @@ public class SymbolTable {
      * @param offset 
      */
     public SymbolTableEntry addEntry(String varname, Type type, SymbolKind kind, AST node, int offset) {
-        SymbolTableEntry st_entry = new SymbolTableEntry(varname, type, kind, node, (short)offset);
+        SymbolTableEntry st_entry = new SymbolTableEntry(varname, type, kind, node, offset);
         entries.put(varname, st_entry);
         return st_entry;
     }
@@ -82,5 +83,13 @@ public class SymbolTable {
 
 	public void addEntry(SymbolTableEntry e) {
 		this.entries.put(e.getVarname(), e);
+	}
+
+
+	public SymbolTableEntry addEntry(String varname, Type type, SymbolKind kind, AST node, int offset, DeclarationContext context) {
+        SymbolTableEntry st_entry = new SymbolTableEntry(varname, type, kind, node, (short)offset);
+        st_entry.setContext(context);
+        entries.put(varname, st_entry);
+		return st_entry;
 	}
 }

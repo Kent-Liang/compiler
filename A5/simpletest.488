@@ -1,19 +1,30 @@
 begin
-	integer x
-	x <= 5
+	integer z
 
-	while true do
+	z <= 5
 
-		put "blah"
+	procedure inc(integer x) begin
+		integer y
+		y <= 5
+		put y, skip
+		put (x+1), skip
 
-		loop
-			put "blah"
-			exit
+		procedure sub(integer j) begin
+			put j-1, skip
+
+			procedure mul(integer a, integer b) begin
+				put a * b, skip
+			end
+
+			mul(z, j)
 		end
 
-		exit
+		sub(x)
 
 	end
-	put "exited"
+
+	inc(6) % 5, 7, 5, 25
+	inc(7) % 5, 8, 6, 30
+	inc(8) % 5, 9, 7, 35
 
 end
