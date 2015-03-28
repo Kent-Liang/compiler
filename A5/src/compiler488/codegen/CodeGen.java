@@ -552,29 +552,26 @@ public class CodeGen implements ASTVisitor<Void> {
 		PUSH(Machine.UNDEFINED);
 		
 		// return address
-		short rtnAddr = generationAddress;
-		PUSH(++rtnAddr);
-		
-		// save dynamic link
+		PUSH(Machine.UNDEFINED);
+		short returnAddress = (short)(generationAddress - 1);
+
+		// Save dynamic link
 		ADDR(currentScope.getLexicalLevel(), 0);
+
+		// Allocate storage for variables.
+		PUSH(Machine.UNDEFINED);
+		PUSH(expn.getScope().getVariableSize());
+		DUPN();
 		
 		// save display register
 		ADDR(currentScope.getLexicalLevel() + 1, 0);
 
 		// set the display register of the anonymous functions lexical level
 		PUSHMT();
-		PUSH(3);
+		PUSH(expn.getScope().getVariableSize() + 3);
 		SUB();
 		
 		SETD(currentScope.getLexicalLevel() + 1);
-
-		// allocate storage for variables
-		int totalVariablesSize = expn.getScope().getVariableSize() + expn.getScope().getParameterSize();
-		if(totalVariablesSize > 0) {
-			PUSH(Machine.UNDEFINED);
-			PUSH(totalVariablesSize);
-			DUPN();
-		}
 		
 		// set the scope correctly
 		MajorScope before = currentScope;
@@ -589,25 +586,18 @@ public class CodeGen implements ASTVisitor<Void> {
 		// reset the scope
 		currentScope = before;
 		
-		// exit code
-		
+		// Exit code
 		// store the return value at the top of the stack, below the activation record
 		ADDR(currentScope.getLexicalLevel() + 1, -1);
 		SWAP();
 		STORE();
 
+		// Reset display register.
+		SETD(currentScope.getLexicalLevel() + 1);
 		
 		// de allocate
-		if(totalVariablesSize > 0) {
-			PUSH(totalVariablesSize);
-			POPN();
-		}
-		
-		// reset the old display register's value
-		
-		// skip setting the display register, if the old value is undefined
-		
-		SETD(currentScope.getLexicalLevel() + 1);
+		PUSH(expn.getScope().getVariableSize());
+		POPN();
 		
 		// remove dynamic link
 		POP();
@@ -616,7 +606,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		BR();
 		
 		// patch to here
-		patchAddress(rtnAddr, generationAddress);
+		patchAddress(returnAddress, generationAddress);
 		
 		return null;
 	}
