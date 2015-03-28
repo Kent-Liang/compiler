@@ -518,36 +518,7 @@ public class CodeGen implements ASTVisitor<Void> {
 	public Void visit(ScalarDecl decl) { return null; }
 
 	@Override
-	public Void visit(AnonFuncExpn expn) {
-		/*
-		 * 
-		 % entry
-		PUSH UNDEFINED	% Allocate return value space
-			
-		PUSH <Address of 2-17-1>% Save the return address.
-		ADDR <caller>2 0		% Save the dynamic link.
-		
-		ADDR <anonymous fn>3 0		% save the display register
-			
-		PUSHMT		% update the display register
-		PUSH 3 			% num(args) + num(variables) + 3
-		SUB
-	
-		SETD 3
-
-		% anonymous function exit
-		ADDR 3 -1		% Store the return address below the activation record
-		SWAP
-		STORE
-		
-		SETD 3			% Restore display register value
-		
-		POP			% Pop dynamic link
-		BR			% Branch back to the return address
-
-		 */
-		// TODO: fix display save order issue
-		
+	public Void visit(AnonFuncExpn expn) {		
 		// return value
 		PUSH(Machine.UNDEFINED);
 		
