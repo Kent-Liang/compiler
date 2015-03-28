@@ -1,4 +1,19 @@
 begin
 	integer x
 	x <= 5
+
+	while true do
+
+		put "blah"
+
+		loop
+			put "blah"
+			exit
+		end
+
+		exit
+
+	end
+	put "exited"
+
 end

@@ -759,7 +759,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		// Return value
 		PUSH(Machine.UNDEFINED);
 		// Return address. Will patch after BR statement is written.
-		short returnAddressPatch = generationAddress + 1;
+		short returnAddressPatch = (short)(generationAddress + 1);
 		PUSH(Machine.UNDEFINED);
 		// Dynamic link
 		ADDR(currentScope.getLexicalLevel(), 0);
@@ -946,7 +946,8 @@ public class CodeGen implements ASTVisitor<Void> {
 			BR();
 		}
 		//The exit address that needs to be patch
-		patch_addr.add((int) exit_addr);
+		loopPatchAddresses.get(loopPatchAddresses.size() - 1).add((int) exit_addr);
+		
 		return null;
 	}
 
@@ -1008,16 +1009,19 @@ public class CodeGen implements ASTVisitor<Void> {
 	public Void visit(LoopStmt stmt) {
 		// TODO Auto-generated method stub
 		short start_loop = generationAddress;
+		
+		loopPatchAddresses.add(new ArrayList<Integer>());
+		
 		CODEGEN(stmt.getBody());
 		PUSH(start_loop);
 		BR();
 		//Patching the address for exit/exit when
-		for (int addr: patch_addr){
+		for (int addr: loopPatchAddresses.get(loopPatchAddresses.size() - 1)){
 			addr ++;
 			patchAddress((short)addr, generationAddress);
 		}
 		//Clean up the array list
-		patch_addr.clear();
+		loopPatchAddresses.remove(loopPatchAddresses.size() - 1);
 		return null;
 	}
 
@@ -1057,6 +1061,7 @@ public class CodeGen implements ASTVisitor<Void> {
 
 		// New (pseudo-)routine, new routinePatch list.
 		routinePatchAddresses.add(new ArrayList<RoutinePatchEntry>());
+		pendingRoutines.add(new ArrayList<RoutineDecl>());
 
 		// C00
 		PUSHMT();
@@ -1087,7 +1092,7 @@ public class CodeGen implements ASTVisitor<Void> {
 	 * Generates code for all of the pending routines of the function most
 	 * recently having finished codegen.
 	 */
-	public void visitPendingRoutines() {
+	private void visitPendingRoutines() {
 		// Process all local routines.
 		List<RoutineDecl> pendingLocalRoutines =
 			pendingRoutines.get(pendingRoutines.size() - 1);
@@ -1100,7 +1105,7 @@ public class CodeGen implements ASTVisitor<Void> {
 
 		// Patch any dangling references.
 		for (RoutinePatchEntry routinePatchEntry
-				: routinePatchAddresses.get(routinePatchAddresses.size())) {
+				: routinePatchAddresses.get(routinePatchAddresses.size() - 1)) {
 			patchAddress(
 				routinePatchEntry.memoryAddress
 				, routinePatchEntry.routineSymbol.getOffset());
@@ -1112,7 +1117,7 @@ public class CodeGen implements ASTVisitor<Void> {
 	/**
 	 * Generates instruction code for the given routine.
 	 */
-	public void visitPendingRoutine(RoutineDecl routineDecl) {
+	private void visitPendingRoutine(RoutineDecl routineDecl) {
 		// New routine, new routinePatch list.
 		routinePatchAddresses.add(new ArrayList<RoutinePatchEntry>());
 
@@ -1215,7 +1220,6 @@ public class CodeGen implements ASTVisitor<Void> {
 		short addr = ++generationAddress;
 		PUSH(addr);
 		BR();
-		patch_addr.add((int)addr);
 		return null;
 	}
 
@@ -1251,7 +1255,9 @@ public class CodeGen implements ASTVisitor<Void> {
 	 */
 	@Override
 	public Void visit(WhileDoStmt stmt) {
-		// TODO Auto-generated method stub
+
+		loopPatchAddresses.add(new ArrayList<Integer>());
+		
 		short start_while = generationAddress;
 		CODEGEN(stmt.getExpn());
 		short end_of_while_addr = generationAddress;
@@ -1260,6 +1266,15 @@ public class CodeGen implements ASTVisitor<Void> {
 		CODEGEN(stmt.getBody());
 		PUSH(start_while);
 		BR();
+		
+		//Patching the address for exit/exit when
+		for (int addr: loopPatchAddresses.get(loopPatchAddresses.size() - 1)){
+			addr ++;
+			patchAddress((short)addr, generationAddress);
+		}
+		//Clean up the array list
+		loopPatchAddresses.remove(loopPatchAddresses.size() - 1);
+		
 		patchAddress(++end_of_while_addr, generationAddress);
 		return null;
 	}

@@ -60,7 +60,7 @@ public class SymbolTable {
      * @param offset 
      */
     public SymbolTableEntry addEntry(String varname, Type type, SymbolKind kind, AST node, int offset) {
-        SymbolTableEntry st_entry = new SymbolTableEntry(varname, type, kind, node, offset);
+        SymbolTableEntry st_entry = new SymbolTableEntry(varname, type, kind, node, (short)offset);
         entries.put(varname, st_entry);
         return st_entry;
     }

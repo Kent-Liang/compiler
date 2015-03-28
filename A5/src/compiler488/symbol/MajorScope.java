@@ -80,7 +80,7 @@ public class MajorScope {
 	
 	private void addEntry(SymbolTableEntry e) {
 		e.setLexicalLevel(this.lexicalLevel);
-		e.setOffset(currentOffset);
+		e.setOffset((short)currentOffset);
 		symbolTable.addEntry(e);
 		
 		currentOffset += e.getSize();
