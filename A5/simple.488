@@ -1,0 +1,22 @@
+begin
+
+	integer function id(integer x) begin
+		return (x)
+	end
+
+	put id(1), skip
+
+	procedure id2(integer y) begin
+
+		if y < 5 then
+			return
+		end
+
+		put "y >= 5"
+
+	end
+
+	id2(3)
+	id2(6)
+
+end

@@ -128,7 +128,11 @@ public class CodeGen implements ASTVisitor<Void> {
 	 */
 	private List<List<Integer>> loopPatchAddresses =
 		new ArrayList<List<Integer>>();
+	
 
+	private List<Short> returnPatchAddresses =
+		new ArrayList<Short>();
+	
 	/**
 	 * List of addresses containing values to be patched to routine starts; one
 	 * list for each open routine.
@@ -515,7 +519,6 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(AnonFuncExpn expn) {
-		// TODO Auto-generated method stub
 		/*
 		 * 
 		 % entry
@@ -543,6 +546,8 @@ public class CodeGen implements ASTVisitor<Void> {
 		BR			% Branch back to the return address
 
 		 */
+		// TODO: fix display save order issue
+		
 		// return value
 		PUSH(Machine.UNDEFINED);
 		
@@ -685,8 +690,6 @@ public class CodeGen implements ASTVisitor<Void> {
 			patchAddress(addr, generationAddress); 
 		}
 
-		// TODO: SHORT-CIRCUITING/CONDITIONAL
-
 		return null;
 	}
 
@@ -729,7 +732,6 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(ConstExpn expn) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -756,10 +758,11 @@ public class CodeGen implements ASTVisitor<Void> {
 	public Void visit(FunctionCallExpn expn) {
 		// Return value
 		PUSH(Machine.UNDEFINED);
+
 		// Return address. Will patch after BR statement is written.
+		PUSH(Machine.UNDEFINED);
 		short returnAddressPatch = (short)(generationAddress - 1);
 		
-		PUSH(Machine.UNDEFINED);
 		// Dynamic link
 		ADDR(currentScope.getLexicalLevel(), 0);
 		// Arguments.
@@ -787,6 +790,10 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(IdentExpn expn) {
+		// TODO: check if name of function or procedure
+		// if symbol == procedure, make fake ProcedureCallStmt, visit
+		// if symbol == function, make fake FunctionCallExpn, visit
+		// else do this
 		CODEGEN_ADDR(expn);
 		LOAD();
 
@@ -894,7 +901,6 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(UnaryExpn expn) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -929,7 +935,6 @@ public class CodeGen implements ASTVisitor<Void> {
 	 */
 	@Override
 	public Void visit(ExitStmt stmt) {
-		// TODO Auto-generated method stub
 		short exit_addr = generationAddress;
 		//exit when
 		if (stmt.getExpn() != null){
@@ -952,7 +957,6 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(GetStmt stmt) {
-		// TODO Auto-generated method stub
 		for (Expn expn : stmt.getInputs()) {
 			CODEGEN_ADDR(expn);
 			READI();
@@ -968,7 +972,6 @@ public class CodeGen implements ASTVisitor<Void> {
 	 */
 	@Override
 	public Void visit(IfStmt stmt) {
-		// TODO Auto-generated method stub
 		// If statement without else.
 		CODEGEN(stmt.getCondition());
 		// If there is no else statement in the if statement,
@@ -994,7 +997,6 @@ public class CodeGen implements ASTVisitor<Void> {
 
 	@Override
 	public Void visit(LoopingStmt stmt) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -1006,7 +1008,6 @@ public class CodeGen implements ASTVisitor<Void> {
 	 */
 	@Override
 	public Void visit(LoopStmt stmt) {
-		// TODO Auto-generated method stub
 		short start_loop = generationAddress;
 		
 		loopPatchAddresses.add(new ArrayList<Integer>());
@@ -1164,6 +1165,8 @@ public class CodeGen implements ASTVisitor<Void> {
 		// Stack is now ready for function code.		
 		// Generate the code for the routine body.
 		CODEGEN(routineBody);
+		
+		short cleanupSectionAddress = generationAddress;
 
 		// Handle the return value.
 		if (routineDecl.getType() != null)
@@ -1189,6 +1192,12 @@ public class CodeGen implements ASTVisitor<Void> {
 		// Branch to the return address, leaving the return value on the top of
 		// the stack.
 		BR();
+		
+		// patch the return addresses in this routine (hopefully)
+		for(Short address : returnPatchAddresses) {
+			patchAddress(address, cleanupSectionAddress);
+		}
+		returnPatchAddresses.clear();
 
 		// Recurse to define any local routines. Recursion stops when no local
 		// routines are declared.
@@ -1231,6 +1240,9 @@ public class CodeGen implements ASTVisitor<Void> {
 		}
 		PUSH(Machine.UNDEFINED);
 		short addr = (short)(generationAddress - 1);
+		
+		returnPatchAddresses.add(addr);
+		
 		BR();
 		return null;
 	}

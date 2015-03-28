@@ -65,12 +65,9 @@ public class ArrayDeclPart extends DeclarationPart {
     /**
      * Calculates the number of values held in an array declared in this way.
      *
-     * TODO: Add a correct computation of the size of this array.
-     *
      * @return size of the array
      */
     public int getSize() {
-        // FIXME: This is broken.
     	if(this.isTwoDimensional) {
         	int numRows = (ub1 - lb1 + 1);
         	int numCols = (ub2 - lb2 + 1);

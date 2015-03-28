@@ -768,6 +768,8 @@ public class Semantics implements ASTVisitor<Boolean> {
     		return false;
     	}
     	
+    	// TODO: prevent assigning parameters
+    	
     	SymbolTableEntry entry = lookup(varname, false);
     	if(!(entry.getKind() == SymbolKind.SCALAR && left instanceof IdentExpn)
     			&& !(entry.getKind() == SymbolKind.ARRAY && left instanceof SubsExpn)) {
