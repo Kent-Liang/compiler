@@ -759,7 +759,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		// Return value
 		PUSH(Machine.UNDEFINED);
 		// Return address. Will patch after BR statement is written.
-		short returnAddressPatch = generationAddress;
+		short returnAddressPatch = generationAddress + 1;
 		PUSH(Machine.UNDEFINED);
 		// Dynamic link
 		ADDR(currentScope.getLexicalLevel(), 0);
@@ -1093,7 +1093,7 @@ public class CodeGen implements ASTVisitor<Void> {
 			pendingRoutines.get(pendingRoutines.size() - 1);
 		for (RoutineDecl routineDecl : pendingLocalRoutines) {
 			// Will recursively generate code for all local functions as well.
-			visit(routineDecl);
+			visitPendingRoutine(routineDecl);
 		}
 		// Local routines are done processing, remove from list.
 		pendingRoutines.remove(pendingRoutines.size() - 1);
