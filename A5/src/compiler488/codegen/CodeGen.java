@@ -51,6 +51,7 @@ import compiler488.runtime.MemoryAddressException;
 import compiler488.runtime.ExecutionException;
 import compiler488.symbol.MajorScope;
 import compiler488.symbol.SymbolTableEntry;
+import compiler488.symbol.SymbolTableEntry.SymbolKind;
 
 /**
  * CodeGenerator.java
@@ -755,9 +756,19 @@ public class CodeGen implements ASTVisitor<Void> {
 		// if symbol == procedure, make fake ProcedureCallStmt, visit
 		// if symbol == function, make fake FunctionCallExpn, visit
 		// else do this
-		CODEGEN_ADDR(expn);
-		LOAD();
-
+		SymbolTableEntry entry = currentScope.lookup(expn.getIdent());
+		if (entry == null){
+			
+		}
+		// check if the identifier is a procedure
+		else if(entry.getKind() == SymbolKind.FUNCTION) {
+			ASTList<Expn> argument = new ASTList<Expn>();
+			FunctionCallExpn fc = new FunctionCallExpn(expn.getIdent(), argument);
+			visit(fc);
+		}else{
+			CODEGEN_ADDR(expn);
+			LOAD();
+		}
 		return null;
 	}
 
