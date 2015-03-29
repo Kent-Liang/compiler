@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="lib/JFlex.jar"/>
 	<classpathentry kind="lib" path="runlib/java-cup-11a-runtime.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/h/u6/g0/00/g0quachb/compiler/A5/dist/compiler488.jar"/>
+	<classpathentry kind="lib" path="G:/cygwin/home/Benson/csc488/A5/dist/compiler488.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
