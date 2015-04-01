@@ -1,0 +1,28 @@
+% A template file holding a simple procedure to help print passed / failed tests
+begin
+  integer numTests, numPassed, numFailed
+  numTests <= 0
+  numPassed <= 0
+  numFailed <= 0
+
+  % run the test and increment the global variables
+  procedure runTest(boolean b) begin
+    numTests <= numTests + 1
+
+    if b then
+      numPassed <= numPassed + 1
+      put "PASSED: "
+    else
+      numFailed <= numFailed + 1
+      put "FAILED: "
+    end
+  end
+
+  runTest(0 = 0)
+
+  % output the total failed and passed
+  if numFailed > 0 then
+    put "Tests failed: ", numFailed, " / ", numTests, skip
+  end
+  put "Tests passed: ", numPassed, " / ", numTests
+end
