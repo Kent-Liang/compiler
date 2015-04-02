@@ -1,0 +1,13 @@
+begin
+	integer a
+	a <= 10
+	while a >= 0 do
+		a <= a - 1
+		exit when (a = 5)
+	end
+	if a = 5 then
+		put "while_exitwhen passed"
+	else
+		put "while_exitwhen failed"
+	end
+end

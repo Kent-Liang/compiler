@@ -1,0 +1,13 @@
+begin
+	integer a
+	a <= 10
+	while a >= 0 do
+		a <= a - 1
+		exit
+	end
+	if a = 9 then
+		put "while_exit passed"
+	else
+		put "while_exit failed"
+	end
+end

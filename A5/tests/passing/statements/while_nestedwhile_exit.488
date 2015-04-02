@@ -1,0 +1,26 @@
+begin
+	integer a,b,c
+	a <= 0
+	b <= 0
+	c <= 0
+	while a < 10 do
+		while b < 10 do
+			b <= b + 1
+			while c < 10 do
+				c <= c + 1
+				exit when (c > 5)
+			end
+			exit when (b = 6)
+		end
+		a <= a + 1
+		exit
+	end
+	%because c doesn't reset after exiting the while loop. So c = 10.
+	%It's design like this to see will the third loop be executed when 
+	%c = 10
+	if (a + b + c) = 17 then
+		put "while_nestedwhile_exit passed"
+	else
+		put "while_nestedwhile_exit failed"
+  	end
+end
