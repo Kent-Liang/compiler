@@ -1,0 +1,12 @@
+begin
+	integer x
+	x <= 3
+	boolean y
+	y <= true
+	if x = 3 & y then
+		put "assignment passed"
+	else
+		put "assignment failed"
+	end
+
+end
