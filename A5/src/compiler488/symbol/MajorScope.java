@@ -83,7 +83,7 @@ public class MajorScope {
 		e.setLexicalLevel(this.lexicalLevel);
 		
 		// parameter size already calculated
-		System.out.println(varname + " " + offset);
+//		System.out.println(varname + " " + offset);
 		if(context == DeclarationContext.VARIABLE) {
 			variableSize += e.getSize();
 		} else if(context == DeclarationContext.PARAMETER) {

@@ -5,5 +5,5 @@ WHERE=`dirname $0`
 #  Compiler reads one source file from command line argument
 #  Compiler option flags can be provided.
 #  Output to standard output
-java -jar $WHERE/dist/compiler488.jar -D x $*
+java -jar $WHERE/dist/compiler488.jar $*
 exit 0
