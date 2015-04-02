@@ -1,0 +1,21 @@
+begin
+	integer i 
+	i <= 0
+	loop
+		i <= i + 1
+		loop
+			exit when (6 < i)
+			i <= i + 1
+			loop 
+				i <= i + 5
+				exit
+			end
+		end
+		exit when (15 < i) 
+	end
+	if (i=16) then
+		put "loop_nestedloop passed"
+	else
+		put "loop_nestedloop failed"
+	end
+end

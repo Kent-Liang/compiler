@@ -1,0 +1,8 @@
+begin
+	if false then
+		put "if_else_basic failed"
+	else
+		put "if_else_basic passed"
+	end
+	put "if_else_bf passed"
+end

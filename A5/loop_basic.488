@@ -1,0 +1,13 @@
+begin
+	integer i 
+	i <= 0
+	loop
+		i <= i + 1
+		exit when (10 > i) 
+	end
+	if (i=11) then
+		put "loop basic test passed"
+	else
+		put "loop basic test failed"
+	end
+end
