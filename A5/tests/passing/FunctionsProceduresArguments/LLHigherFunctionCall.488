@@ -1,0 +1,22 @@
+% Tests calling functions with a higher lexical level than the caller.
+begin
+	% Run test
+    integer function foo(integer x) begin
+		integer function bar(integer x) begin
+			return (x)
+		end
+		
+		return (bar(x))
+    end
+
+    integer z
+	z <= foo(5)
+	
+	% Check if success
+	if (z = 5)
+	then
+		put "SUCCESS"
+	else
+		put "FAILURE"
+	end
+end

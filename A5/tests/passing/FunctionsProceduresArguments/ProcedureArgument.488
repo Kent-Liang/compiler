@@ -1,0 +1,19 @@
+% Tests calling a procedure with an argument.
+begin
+	% Run test
+	integer z
+    procedure foo (integer x) begin
+		z <= x
+        return
+    end
+
+    foo(5)
+	
+	% Check if success
+	if (z = 5)
+	then
+		put "SUCCESS"
+	else
+		put "FAILURE"
+	end
+end

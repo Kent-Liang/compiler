@@ -1,0 +1,18 @@
+% Tests using a function as a routine argument.
+begin
+	% Run test
+    integer function foo(integer x) begin
+        return (x + x)
+    end
+
+    integer z
+	z <= foo(foo(5))
+	
+	% Check if success
+	if (z = 20)
+	then
+		put "SUCCESS"
+	else
+		put "FAILURE"
+	end
+end
