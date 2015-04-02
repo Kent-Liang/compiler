@@ -1,0 +1,13 @@
+begin
+	integer i 
+	i <= 0
+	loop
+		i <= i + 1
+		exit
+	end
+	if (i=1) then
+		put "loop_basic_exit passed"
+	else
+		put "loop_basic_exit failed"
+	end
+end

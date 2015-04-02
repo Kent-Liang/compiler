@@ -1,0 +1,12 @@
+begin
+	integer a
+	a <= 10
+	while a < 0 do
+		a <= a - 1
+	end
+	if a = -1 then
+		put "while_basic passed"
+	else
+		put "while_basic failed"
+	end
+end
