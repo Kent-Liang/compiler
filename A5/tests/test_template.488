@@ -18,11 +18,13 @@ begin
     end
   end
 
-  runTest(0 = 0)
+  % BEGIN TESTS
+  runTest(0 = 0) put "check if 0 = 0", skip
+  % END TESTS
 
   % output the total failed and passed
   if numFailed > 0 then
     put "Tests failed: ", numFailed, " / ", numTests, skip
   end
-  put "Tests passed: ", numPassed, " / ", numTests
+  put "Tests passed: ", numPassed, " / ", numTests, skip
 end

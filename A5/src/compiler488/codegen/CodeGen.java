@@ -414,32 +414,30 @@ public class CodeGen implements ASTVisitor<Void> {
 			CODEGEN_ADDR((SubsExpn) e);
 		}
 	}
-
-	private void CODEGEN_ADDR(IdentExpn expn) {
-		SymbolTableEntry e = currentScope.lookup(expn.getIdent());
+	
+	private SymbolTableEntry lookThroughAncestors(String ident) {
+		SymbolTableEntry e = currentScope.lookup(ident);
 		
-		// look up the scopes
 		MajorScope ancestor = currentScope.getParent();
 		while(ancestor != null &&
 				e == null) {
-			e = ancestor.lookup(expn.getIdent());
+			e = ancestor.lookup(ident);
 			ancestor = ancestor.getParent();
 		}
 		
+		return e;
+	}
+
+	private void CODEGEN_ADDR(IdentExpn expn) {
+		SymbolTableEntry e = lookThroughAncestors(expn.getIdent());
+		
+		// look up the scopes
 		ADDR(e.getLexicalLevel(), e.getOffset());
 	}
 
 	private void CODEGEN_ADDR(SubsExpn expn) {
 
-		SymbolTableEntry e = currentScope.lookup(expn.getVariable());
-		
-		// look up the scopes
-		MajorScope ancestor = currentScope.getParent();
-		while(ancestor != null &&
-				e == null) {
-			e = ancestor.lookup(expn.getVariable());
-			ancestor = ancestor.getParent();
-		}
+		SymbolTableEntry e = lookThroughAncestors(expn.getVariable());
 		
 		Expn expr1 = expn.getSubscript1();
 		Expn expr2 = expn.getSubscript2();
@@ -519,7 +517,7 @@ public class CodeGen implements ASTVisitor<Void> {
 	public Void visit(ScalarDecl decl) { return null; }
 
 	@Override
-	public Void visit(AnonFuncExpn expn) {		
+	public Void visit(AnonFuncExpn expn) {
 		// return value
 		PUSH(Machine.UNDEFINED);
 		
@@ -528,26 +526,29 @@ public class CodeGen implements ASTVisitor<Void> {
 		short returnAddress = (short)(generationAddress - 1);
 
 		// Save dynamic link
-		ADDR(currentScope.getLexicalLevel(), 0);
+		ADDR(currentScope.getLexicalLevel(), 0); // WRONG
 
 		// Allocate storage for variables.
-		PUSH(Machine.UNDEFINED);
-		PUSH(expn.getScope().getVariableSize());
-		DUPN();
+		if(expn.getScope().getVariableSize() > 0) {
+			PUSH(Machine.UNDEFINED);
+			PUSH(expn.getScope().getVariableSize());
+			DUPN();
+		}
 		
 		// save display register
-		ADDR(currentScope.getLexicalLevel() + 1, 0);
+		ADDR(currentScope.getLexicalLevel(), 0);
 
 		// set the display register of the anonymous functions lexical level
 		PUSHMT();
 		PUSH(expn.getScope().getVariableSize() + 3);
 		SUB();
 		
-		SETD(currentScope.getLexicalLevel() + 1);
-		
 		// set the scope correctly
 		MajorScope before = currentScope;
 		currentScope = expn.getScope();
+		
+		// use the expressions scope
+		SETD(currentScope.getLexicalLevel());
 		
 		// generate the body code
 		CODEGEN(expn.getBody());
@@ -555,27 +556,29 @@ public class CodeGen implements ASTVisitor<Void> {
 		// generate the yield expression
 		CODEGEN(expn.getExpn());
 		
-		// reset the scope
-		currentScope = before;
-		
 		// Exit code
 		// store the return value at the top of the stack, below the activation record
-		ADDR(currentScope.getLexicalLevel() + 1, -1);
+		ADDR(currentScope.getLexicalLevel(), -1);
 		SWAP();
 		STORE();
 
 		// Reset display register.
-		SETD(currentScope.getLexicalLevel() + 1);
+		SETD(currentScope.getLexicalLevel());
 		
 		// de allocate
-		PUSH(expn.getScope().getVariableSize());
-		POPN();
+		if(currentScope.getVariableSize() > 0) {
+			PUSH(currentScope.getVariableSize());
+			POPN();
+		}
 		
 		// remove dynamic link
 		POP();
 		
 		// return to return address
 		BR();
+		
+		// reset the scope
+		currentScope = before;
 		
 		// patch to here
 		patchAddress(returnAddress, generationAddress);
@@ -733,7 +736,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		}
 
 		// Need the routine symbol to mark the reference for patching.
-		SymbolTableEntry routineSymbol = currentScope.lookup(expn.getIdent());
+		SymbolTableEntry routineSymbol = lookThroughAncestors(expn.getIdent());
 		RoutineDecl routineDecl = (RoutineDecl)routineSymbol.getNode();
 
 		// Branch to called function. For now, just mark it for patching.
@@ -756,16 +759,17 @@ public class CodeGen implements ASTVisitor<Void> {
 		// if symbol == procedure, make fake ProcedureCallStmt, visit
 		// if symbol == function, make fake FunctionCallExpn, visit
 		// else do this
-		SymbolTableEntry entry = currentScope.lookup(expn.getIdent());
+		SymbolTableEntry entry = lookThroughAncestors(expn.getIdent());
 		if (entry == null){
-			
+			// look up parent
 		}
+		
 		// check if the identifier is a procedure
-		else if(entry.getKind() == SymbolKind.FUNCTION) {
+		if(entry.getKind() == SymbolKind.FUNCTION) {
 			ASTList<Expn> argument = new ASTList<Expn>();
 			FunctionCallExpn fc = new FunctionCallExpn(expn.getIdent(), argument);
 			visit(fc);
-		}else{
+		} else {
 			CODEGEN_ADDR(expn);
 			LOAD();
 		}
@@ -1012,7 +1016,7 @@ public class CodeGen implements ASTVisitor<Void> {
 		}
 
 		// Need the routine symbol to mark the reference for patching.
-		SymbolTableEntry routineSymbol = currentScope.lookup(stmt.getName());
+		SymbolTableEntry routineSymbol = lookThroughAncestors(stmt.getName());
 		RoutineDecl routineDecl = (RoutineDecl)routineSymbol.getNode();
 
 		// Branch to called function. For now, just mark it for patching.
@@ -1107,7 +1111,7 @@ public class CodeGen implements ASTVisitor<Void> {
 
 		// Mark the start of the routine.
 		SymbolTableEntry routineSymbol =
-			currentScope.lookup(routineDecl.getName());
+				lookThroughAncestors(routineDecl.getName());
 		routineSymbol.setOffset(generationAddress);
 
 		Scope routineBody = routineDecl.getBody();
