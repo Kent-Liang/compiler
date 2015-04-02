@@ -1,0 +1,83 @@
+begin
+% A template file holding a simple procedure to help print passed / failed tests
+begin
+  integer numTests, numPassed, numFailed
+  numTests <= 0
+  numPassed <= 0
+  numFailed <= 0
+
+  % run the test and increment the global variables
+  procedure runTest(boolean b) begin
+    numTests <= numTests + 1
+
+    if b then
+      numPassed <= numPassed + 1
+      put "PASSED: "
+    else
+      numFailed <= numFailed + 1
+      put "FAILED: "
+    end
+  end
+
+  % BEGIN TESTS
+
+  % parameter access with 0 local variables
+  procedure proc(integer x) begin
+    runTest(x = 6) put "check parameter access with no local variables", skip
+  end
+
+  proc(6)
+
+  % parameter access with 1 local variable
+  procedure proc2(integer x) begin
+    integer y
+    runTest(x = 2) put "check parameter access with 1 local variables", skip
+  end
+
+  proc2(2)
+
+  % parameter access with n local variables
+  procedure proc3(integer x) begin
+    integer y, z, u, a
+    runTest(x = 7) put "check parameter access with some local variables", skip
+  end
+
+  proc3(7)
+
+  % local variable access with 0 parameters
+  procedure proc4 begin
+    integer x
+    x <= 6
+    runTest(x = 6) put "check parameter access with no parameter", skip
+  end
+
+  proc4
+
+  % local variable access with 1 parameter
+  procedure proc5(integer z) begin
+    integer x
+    x <= 4
+    runTest(x = 4) put "check parameter access with 1 parameters", skip
+  end
+
+  proc5(7)
+
+  % local variable access with n parameters
+  procedure proc6(integer z,integer y,integer j) begin
+    integer x
+    x <= 4
+    runTest(x = 4) put "check parameter access with some parameters", skip
+  end
+
+  proc6(7,8,9)
+
+  % END TESTS
+
+  % output the total failed and passed
+  if numFailed > 0 then
+    put "Tests failed: ", numFailed, " / ", numTests, skip
+  end
+  put "Tests passed: ", numPassed, " / ", numTests, skip
+end
+
+end

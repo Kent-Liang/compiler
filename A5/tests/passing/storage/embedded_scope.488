@@ -1,0 +1,124 @@
+% A template file holding a simple procedure to help print passed / failed tests
+begin
+  integer numTests, numPassed, numFailed
+  numTests <= 0
+  numPassed <= 0
+  numFailed <= 0
+
+  % run the test and increment the global variables
+  procedure runTest(boolean b) begin
+    numTests <= numTests + 1
+
+    if b then
+      numPassed <= numPassed + 1
+      put "PASSED: "
+    else
+      numFailed <= numFailed + 1
+      put "FAILED: "
+    end
+  end
+
+  % BEGIN TESTS
+  integer t
+
+  % An embedded scope with 1 local variable in the program scope
+  begin
+    integer x
+    x <= 6
+
+    runTest(x = 6) put "check if embedded scopes with 1 variable in the main scope work", skip
+  end
+
+  % An embedded scope with n local variables in the program scope
+  begin
+    integer x,y
+    x <= 6
+    y <= 5
+
+    runTest(x = 6 & y = 5) put "check if embedded scopes with some variables in the main scope work", skip
+  end
+
+  % An embedded scope with 1 local variable in a function scope
+  integer function one begin
+    begin
+      integer x
+      x <= 6
+
+      runTest(x = 6) put "check if embedded scopes with 1 variable in a function scope work", skip
+    end
+    return (1)
+  end
+
+  t <= one
+
+  % An embedded scope with n local variables in a function scope
+  integer function two begin
+    begin
+      integer x,y
+      x <= 6
+      y <= 5
+
+      runTest(x = 6 & y = 5) put "check if embedded scopes with some variables in a function scope work", skip
+    end
+    return (1)
+  end
+
+  t <= two
+
+  % An embedded scope with 1 local variable in a procedure scope
+  procedure proc_one begin
+    begin
+      integer x
+      x <= 6
+
+      runTest(x = 6) put "check if embedded scopes with 1 variable in a procedure scope work", skip
+    end
+  end
+
+  proc_one
+
+  % An embedded scope with n local variables in a procedure scope
+  procedure proc_two begin
+    begin
+      integer x,y
+      x <= 6
+      y <= 5
+
+      runTest(x = 6 & y = 5) put "check if embedded scopes with some variables in a procedure scope work", skip
+    end
+  end
+
+  proc_two
+
+  % 2 embedded scopes with n variables each within the program scope (already tested)
+  % n embedded scopes with n variables each within the program scope (already tested)
+
+  % An embedded scope with 1 local variable within an embedded scope
+  begin
+    begin
+      integer x
+      x <= 6
+
+      runTest(x = 6) put "check if embedded scopes with 1 variable in an embedded scope work", skip
+    end
+  end
+
+  % An embedded scope with n local variable within an embedded scope
+  begin
+    begin
+      integer x,y
+      x <= 6
+      y <= 5
+
+      runTest(x = 6 & y = 5) put "check if embedded scopes with some variables in an embedded scope work", skip
+    end
+  end
+
+  % END TESTS
+
+  % output the total failed and passed
+  if numFailed > 0 then
+    put "Tests failed: ", numFailed, " / ", numTests, skip
+  end
+  put "Tests passed: ", numPassed, " / ", numTests, skip
+end
