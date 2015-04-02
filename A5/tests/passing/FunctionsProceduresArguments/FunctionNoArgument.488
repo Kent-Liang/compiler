@@ -1,0 +1,18 @@
+% Tests calling a function with no arguments.
+begin
+	% Run test
+    integer function foo begin
+        return (5)
+    end
+
+    integer z
+    z <= foo
+	
+	% Check if success
+	if (z = 5)
+	then
+		put "SUCCESS"
+	else
+		put "FAILURE"
+	end
+end
