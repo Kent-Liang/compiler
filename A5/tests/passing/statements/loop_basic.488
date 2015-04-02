@@ -1,9 +1,9 @@
 begin
-	integer i 
+	integer i
 	i <= 0
 	loop
 		i <= i + 1
-		exit when (10 > i) 
+		exit when (i > 10)
 	end
 	if (i=11) then
 		put "loop basic test passed"
