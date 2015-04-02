@@ -1,0 +1,16 @@
+begin
+	integer x
+	put "input an integer: "
+	get x
+	put x, skip, "input integer has to matched the printed integer", skip
+
+	integer a[5]
+	put "input an integer for integer array: "
+	get a[3]
+	put a[3], skip, "input integer has to matched the printed integer", skip
+
+	integer ia[5,5]
+	put "input true or false for 2d integer array: "
+	get ia[0,1]
+	put ia[0,1], skip, "input integer has to matched the printed integer"
+end
