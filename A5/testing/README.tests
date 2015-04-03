@@ -1,0 +1,11 @@
+Since the worst thing you can do to programmers as a compiler writer is to
+generate an incorrect program from a semantically correct program, we decided
+not to make any failing tests for this assignment.
+
+In the passing folder, there are a few categories of tests:
+expressions, functions, statements, and storage (really a sub category
+of functions.)
+
+Each test in the folder assumes parts of the language works (like if statments,
+put statements) to simplify test writing, but also tests a specific part of the
+language.
