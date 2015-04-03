@@ -1,3 +1,4 @@
+%Put test have to observe manually
 begin
 	put 1
 	put (1 + 1)
