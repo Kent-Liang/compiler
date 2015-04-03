@@ -534,7 +534,9 @@ public class Main {
 
 
         /* do code generation for the program   */
-        generateCode( programAST );
+  		if(!supressExecution) {
+  	        generateCode( programAST );
+  		}
 
         if( errorOccurred ){
       System.out.println("Processing Terminated due to errors during code generation");
