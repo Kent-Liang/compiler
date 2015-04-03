@@ -2,28 +2,28 @@ begin
 	if true then
 		if false then
 			if true then
-				put "if_inner_if failed"
+				put "if_nestedif failed"
 			end
-			put "if_inner_if failed"
+			put "if_nestedif failed"
 			if false then 
 				if true then
-					put "if_inner_if failed"
+					put "if_nestedif failed"
 				end
-				put "if_inner_if failed"
+				put "if_nestedif failed"
 			else
-				put "if_inner_if failed"
+				put "if_nestedif failed"
 			end
 		else
 			if true then
 				if false then
-					put "if_inner_if failed"
+					put "if_nestedif failed"
 				else
 					if true then
 						if true then
-							put "if_inner_if passed"
+							put "if_nestedif passed"
 						end
 					else
-						put "if_inner_if failed"
+						put "if_nestedif failed"
 					end
 				end
 			end
